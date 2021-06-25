@@ -1,0 +1,94 @@
+{% block _ad_images_widget %}
+   {# Slider #}
+   <div 
+      class="ad-create__images"
+      data-index="0"
+      data-prototype="{{ form_widget(form.vars.prototype) | e('html_attr') }}">
+      <p>
+         Ca y est, il ne vous reste qu'ajouter des images et leurs légendes<br>
+         <small class="text-muted">Cliquez sur le boutton 
+            <strong>+</strong> 
+            ci-dessous pour que vous puissiez en ajouter 
+            <br>
+            <strong class="js--ad-create__images-max-image">(4 images au maximum)</strong>
+         </small>
+      </p>
+      {{ form_widget(form) }}
+      <button 
+         type="button" 
+         class="btn btn-sm btn-primary mb-3 js--add-item-slider" 
+         data-class="ad-create__images">
+         <i class="fas fa-plus"></i>
+      </button>
+   </div>
+   <button class="btn btn-primary mt-3" type="submit">
+      {% if app.request.get('_route') == 'ad_create' %}
+         <i class="fas fa-plus me-2"></i>
+         Nouvelle annonce
+      {% else %}
+         <i class="fas fa-pen me-2"></i>
+         Modifier l'annonce
+      {% endif %}
+   </button>
+{% endblock %}
+
+{% block _ad_images_row %}
+   {{ form_widget(form) }}
+{% endblock %}
+
+{% block _ad_images_entry_row %}
+   {{ form_widget(form) }}
+{% endblock %}
+
+{% block _ad_images_entry_widget %}
+<div class="row mb-3 js--ad_images_widget" id="{{ form.vars.id }}">
+   {# Image & caption #}
+   <div class="col-10">
+      <div class="row">
+         {# Image #}
+         <div class="col">
+            <div class="form-outline">
+               {{ form_widget(form.image) }}
+               <small class="form-help">{{ form_help(form.image) }}</small>
+               {% if form_errors(form.image) is not empty %}
+                  <div class="form-error mt-3">{{ form_errors(form.image) }}</div>
+               {% endif %}
+               <div class="form-notch">
+                  <div class="form-notch-leading" style="width: 9px;"></div>
+                  <div class="form-notch-middle" style="width: 48px;"></div>
+                  <div class="form-notch-trailing"></div>
+               </div>
+            </div>
+            <small class="text-muted {% if form_errors(form.image) is not empty %}invisible{% endif %}"><strong>JPEG / 3MO</strong></small>
+         </div>
+         {# Caption #}
+         <div class="col">
+            <div class="form-outline">
+               {{ form_widget(form.caption) }}
+               <label class="form-label" for="{{ form.caption.vars.id }}">{{ form.caption.vars.label }}</label>
+               <small class="form-help">{{ form_help(form.caption) }}</small>
+               {% if form_errors(form.caption) is not empty %}
+                  <div class="form-error mt-3">{{ form_errors(form.caption) }}</div>
+               {% endif %}
+               <!-- Form notch -->
+               <div class="form-notch">
+                  <div class="form-notch-leading" style="width: 9px;"></div>
+                  <div class="form-notch-middle" style="width: 70px;"></div>
+                  <div class="form-notch-trailing"></div>
+               </div>
+            </div>
+            <small class="text-muted {% if form_errors(form.caption) is not empty %}invisible{% endif %}">Entre <strong>3</strong> et <strong>25</strong> caractères</small>
+         </div>
+      </div>
+   </div>
+   {# remove button #}
+   <div class="col">
+      <button 
+         type="button" 
+         class="btn btn-sm btn-danger js--remove-item-slider" 
+         data-id="{{ form.vars.id }}">
+         <i class="fas fa-trash"></i>
+      </button>
+   </div>
+</div>
+{% endblock %}

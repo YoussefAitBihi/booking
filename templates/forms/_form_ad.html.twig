@@ -1,0 +1,145 @@
+{# Start form #}
+{{ form_start(form, {
+   'attr': {
+      'class': 'mt-4 p-4'
+   }
+}) 
+}}
+{# Title & introduction fields #}
+<div class="row">
+   <div class="col">
+      {# Title #}
+      <div class="form-outline">
+         {{ form_widget(form.title) }}
+         {{ form_label(form.title, null, {
+            'label_attr': {
+               'class': 'form-label'
+            }
+         }) }}
+         <small class="form-help">{{ form_help(form.title) }}</small>
+         {% if form_errors(form.title) is not empty %}
+            <div class="form-error mt-3">
+               {{ form_errors(form.title) }}
+            </div>
+         {% endif %}
+      </div>
+      <small class="text-muted {% if form_errors(form.title) is not empty %}invisible{% endif %}">Entre <strong>10</strong> et <strong>255</strong> caractères</small>
+   </div>
+   <div class="col">
+      {# Introduction #}
+      <div class="form-outline">
+         {{ form_widget(form.introduction) }}
+         {{ form_label(form.introduction, null, {
+            'label_attr': {
+               'class': 'form-label'
+            } }) 
+         }}
+         <small class="form-help">{{ form_help(form.introduction) }}</small>
+         {% if form_errors(form.introduction) is not empty %}  
+            <div class="form-error mt-3">
+               {{ form_errors(form.introduction) }}
+            </div>
+         {% endif %}
+      </div>
+      <small 
+         class="text-muted {% if form_errors(form.introduction) is not empty %}invisible{% endif %}"
+      >
+         Entre <strong>100</strong> et <strong>255</strong> caractères
+      </small>
+   </div>
+</div>
+
+{# Thumbnail & city Fields #}
+<div class="row mt-4">
+   <div class="col">
+      <div class="form-outline">
+         {{ form_widget(form.thumbnail) }}
+         <small class="form-help">{{ form_help(form.thumbnail) }}</small>
+         {% if form_errors(form.thumbnail) is not empty %}   
+         <div class="form-error mt-3">
+            {{ form_errors(form.thumbnail) }}
+         </div>
+         {% endif %}
+      </div>
+      <small 
+         class="text-muted {% if form_errors(form.thumbnail) is not empty %}invisible{% endif %}">
+         La miniature doit-être <strong>JPEG</strong> / <strong>3MO</strong>
+      </small>
+   </div>
+   <!-- City Field -->
+   <div class="col">
+      <div class="form-group mb-0">
+         {{ form_widget(form.city, {
+            'attr': {
+               'class': 'select'
+            }
+         }) }}
+         <small class="form-help">{{ form_help(form.city) }}</small>
+         {% if form_errors(form.city) is not empty %}
+            <div class="form-error mt-3">
+               {{ form_errors(form.city) }}
+            </div>
+         {% endif %}
+      </div>
+      <small 
+         class="text-muted {% if form_errors(form.city) is not empty %}invisible{% endif %}">
+         Choisir la ville où se trouve votre logement
+      </small>
+   </div>
+</div>
+
+{# Rooms & Price #}
+<div class="row mt-4">
+   <!-- Rooms -->
+   <div class="col">
+      <div class="form-outline">
+         {{ form_widget(form.rooms) }}
+         {{ form_label(form.rooms,
+            null, {
+               'label_attr': {
+                  'class': 'form-label'
+               }
+            }) 
+         }}
+         <small class="form-help">{{ form_help(form.rooms) }}</small>
+         {% if form_errors(form.rooms) is not empty %}
+            <div class="form-error mt-3">
+               {{ form_errors(form.rooms) }}
+            </div>
+         {% endif %}
+      </div>
+      <small class="text-muted {% if form_errors(form.rooms) is not empty %}invisible{% endif %}">Le nombre de chambres doit-être logique</small>
+   </div>
+   <!-- Price -->
+   <div class="col">
+      <div class="form-group mb-0">
+         {{ form_widget(form.price) }}
+         <small class="form-help">{{ form_help(form.price) }}</small>
+         {% if form_errors(form.price) is not empty %}
+            <div class="form-error mt-3">
+               {{ form_errors(form.price) }}
+            </div>
+         {% endif %}
+      </div>
+      <small class="text-muted {% if form_errors(form.price) is not empty %}invisible{% endif %}">Le prix doit-être logique</small>
+   </div>
+</div>
+
+<!-- Separator -->
+<hr class="my-4">
+
+{# Description #}
+{{ form_widget(form.description) }}
+<small class="form-help">{{ form_help(form.description) }}</small>
+{% if form_errors(form.description) is not empty %}
+   <div class="form-error mt-3">
+      {{ form_errors(form.description) }}
+   </div>
+{% endif %}
+<small class="text-muted {% if form_errors(form.description) is not empty %}invisible{% endif %}">Au moins <strong>300</strong> caractères</small>
+
+{# Separator #}
+<hr class="my-4">
+
+{{ form_end(form) }}
+<!-- End form -->

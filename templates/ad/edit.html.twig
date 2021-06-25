@@ -1,0 +1,25 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+   Modification de l'annonce n°{{ ad.id }}
+{% endblock %}
+
+{% form_theme form _self %}
+
+{% block body %}
+<div class="container">
+   <div class="ad-update">
+      <header class="ad-update__heading mt-4">
+         <h1 class="display-6">Salut <strong>Jhon doe</strong>, vous êtes dans le point de modifier l'annonce dont l'id est <em>{{ ad.id }}</em></h1>
+      </header>
+      {# Including form #}
+      {{ include('forms/_form_ad.html.twig') }}
+   </div>
+</div>
+{% endblock %}
+
+{% use "forms/_subform_ad.html.twig" %}
+
+{% block javascripts %}
+   <script src="/js/form-collection.js"></script>
+{% endblock %}

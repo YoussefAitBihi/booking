@@ -1,0 +1,24 @@
+{% extends "base.html.twig" %}
+
+{% block title "Création d'une nouvelle annonce" %}
+
+{% form_theme form _self %}
+
+{% block body %}
+<div class="container">
+   <div class="ad-create">
+      <header class="ad-create__heading mt-4">
+         <h1 class="display-6">Salut <strong>Jhon doe</strong>, voulez-vous créer une nouvelle annonce</h1>
+         <small class="text-muted">Eh bien, c'est très simple</small>
+      </header>
+      {# Including form #}
+      {{ include('forms/_form_ad.html.twig') }}
+   </div>
+</div>
+{% endblock %}
+
+{% use "forms/_subform_ad.html.twig" %}
+
+{% block javascripts %}
+   <script src="/js/form-collection.js"></script>
+{% endblock %}

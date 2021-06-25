@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Toutes les annonces' %}
+
+{% block body %}
+<div class="container my-4">
+   <h1 class="display-6 mb-4">Voici toutes les annonces</h1>
+   <div class="row">
+      {% for ad in ads %}
+         <div class="col-xl-3 col-md-6 col-sm-12 mb-4">
+            {{  include("cards/ad_card.html.twig") }}
+         </div>
+      {% endfor %}
+   </div>
+</div>
+{% endblock %}

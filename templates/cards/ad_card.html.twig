@@ -1,0 +1,57 @@
+{% set url = path("ad_show", {"id": ad.id, "slug": ad.slug}) %}
+
+<div class="card hover-shadow">
+   <div 
+      class="bg-image hover-overlay ripple"
+      data-mdb-ripple-color="light"
+      >
+      <img
+         src="/uploads/thumbnails/{{ ad.thumbnail }}"
+         class="img-fluid"
+         alt="Img fluid"
+      />
+      <a href="{{ url }}">
+         <div class="mask" style="background-color: rgba(251, 251, 251, 0.15)"></div>
+      </a>
+   </div>
+   <div class="card-body">
+      <h5 class="card-title text-truncate" title="{{ ad.title }}">{{ ad.title }}</h5>
+      <p class="card-text overflow-hidden" style="max-height: 47px" title="{{ ad.introduction }}"><small>{{ ad.introduction }}</small></p>
+      <div class="card-body__details">
+         <ul class="list-unstyled text-muted">
+            <li>
+               <small>
+                  <i class="fas fa-map-marker me-2"></i>{{ ad.city }}
+               </small>
+            </li>
+            <li>
+               <small>
+                  <i class="fas fa-hotel me-2"></i>{{ ad.rooms }}
+               </small>
+            </li>
+            <li>
+               <small>
+                  <i class="fas fa-dollar-sign me-2"></i>{{ ad.price }}
+               </small>
+            </li>
+            <li>
+               <small>
+                  <i class="fas fa-calendar me-2"></i>{{ ad.publishedAt|date('j F Y') }}
+               </small>
+            </li>
+         </ul>
+      </div>
+   </div>
+   <div class="card-footer bg-light d-flex justify-content-between align-items-center">
+      <div>
+         <small class="text-warning">
+            <strong>4.6</strong>
+            {% for i in 0..4 %}
+               <i class="fas fa-star"></i>
+            {% endfor %}
+            <strong class="text-muted">(100)</strong>
+         </small>
+      </div>
+      <small><a href="{{ url }}">Voir plus</a></small>
+   </div>
+</div>

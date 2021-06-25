@@ -1,0 +1,82 @@
+{% extends "base.html.twig" %}
+
+{% block title "Création d'un nouveau compte" %}
+
+{% form_theme form _self %}
+
+{% block body %}
+<div class="container mt-5 vh-100">
+   <h1 class="display-6">
+      Salut, vous êtes dans le point de créer un nouveau compte
+   </h1>
+   <small class="text-muted">Eh bien, c'est très simple</small>
+   <div class="row mt-5 justify-content-center">
+      <div class="col-md-8 col-sm-12">
+         {{ form_start(form) }}
+
+            <!-- Full name -->
+            <div class="row mb-3">
+               <!-- First name Widget -->
+               <div class="col">
+                  <div class="form-outline">
+                     {{ form_widget(form.firstName) }}
+                     {{ form_label(form.firstName, null, {
+                        'label_attr': {
+                           'class': 'form-label'
+                        }
+                     }) }}
+                     <small class="form-help">{{ form_help(form.firstName) }}</small>
+                     {% if form_errors(form.firstName) is not empty %}
+                        <div class="form-error mt-3">
+                           {{ form_errors(form.firstName) }}
+                        </div>
+                     {% endif %}
+                  </div>
+                  <small 
+                     class="text-muted {% if form_errors(form.firstName) is not empty %}invisible{% endif %}">Entre <strong>3</strong> et <strong>18</strong> caractères
+                  </small>
+               </div>
+               <!-- Last name Widget -->
+               <div class="col">
+                  <div class="form-outline">
+                     {{ form_widget(form.lastName) }}
+                     {{ form_label(form.lastName, null, {
+                        'label_attr': {
+                           'class': 'form-label'
+                        }
+                     }) }}
+                     <small class="form-help">{{ form_help(form.lastName) }}</small>
+                     {% if form_errors(form.lastName) is not empty %}
+                        <div class="form-error mt-3">
+                           {{ form_errors(form.lastName) }}
+                        </div>
+                     {% endif %}
+                  </div>
+                  <small 
+                     class="text-muted {% if form_errors(form.firstName) is not empty %}invisible{% endif %}">Entre <strong>3</strong> et <strong>18</strong> caractères
+                  </small>
+               </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-outline">
+               {{ form_widget(form.email) }}
+               {{ form_label(form.email, null, {
+                  'label_attr': {
+                     'class': 'form-label'
+                  }
+               }) }}
+               <small class="form-help">{{ form_help(form.email) }}</small>
+               {% if form_errors(form.email) is not empty %}
+                  <div class="form-error mt-3">
+                     {{ form_errors(form.email) }}
+                  </div>
+               {% endif %}
+            </div>
+            <small 
+               class="text-muted {% if form_errors(form.email) is not empty %}invisible{% endif %}">Un <strong>email valide</strong>
+            </small>
+      </div>
+   </div>
+</div>
+{% endblock %}

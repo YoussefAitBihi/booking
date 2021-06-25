@@ -1,0 +1,275 @@
+{% extends "base.html.twig" %}
+
+{% block title ad.title %}
+
+{% block body %}
+
+{# Ad show header #}
+<header 
+   class="ad-show__header text-white py-5"
+   style="background: url(/uploads/thumbnails/{{ ad.thumbnail }})"
+>
+   <div class="overlay d-flex align-items-center">
+      <div class="container">
+         <h1>{{ ad.title }}</h1>
+         <p>{{ ad.introduction }}</p>
+         <div class="ad-show__rating">
+            <small class="text-warning">
+               <strong>4.6</strong>
+               {% for i in 0..4 %}
+                  <i class="fas fa-star"></i>
+               {% endfor %}
+            </small>
+            <small>(<strong>100</strong> notes) <strong>100.000</strong> voyageurs</small><br>
+         </div>
+         <div class="ad-show__owner">
+            Le propriétaire 
+            <a 
+               href="{{ path('ad_show', {'id': ad.id, 'slug': ad.slug}) }}#ad-show__owner-id" class="text-decoration-underline"
+            >
+               {{ ad.owner.fullname }}
+            </a>
+         </div>
+         <div class="ad-show__created-at">
+            Lancé à <strong>{{ ad.publishedAt|date('j F Y') }}</strong>
+         </div>
+      </div>
+   </div>
+</header>
+
+{# Ad show slider and booking #}
+<div class="container my-5">
+   <div class="row">
+      
+      <!-- Ad Carousel -->
+      <div class="col-lg-8 col-md-12">
+         <section class="ad-show__slider">
+            <div id="carouselExampleCaptions" class="carousel slide" data-mdb-ride="carousel">
+               <div class="carousel-indicators">
+                  {% for image in ad.images %} 
+                  <button
+                     type="button"
+                     data-mdb-target="#carouselExampleCaptions"
+                     data-mdb-slide-to="{{ loop.index0 }}"
+                     class="{% if loop.first %}active{% endif %}"
+                     aria-current="true"
+                     aria-label="Slide 1"
+                  ></button>
+                  {% endfor %}
+               </div>
+               <div class="carousel-inner">
+                  {% for image in ad.images %}                    
+                  <div class="carousel-item {% if loop.first %}active{% endif %}">
+                     <img
+                        src="/uploads/sliders/{{ image.image }}"
+                        class="d-block w-100 img-fluid"
+                        alt="..."
+                     />
+                     <div class="carousel-caption d-none d-md-block">
+                        <h5>{{ ad.title }}</h5>
+                        <p>{{ image.caption }}</p>
+                     </div>
+                  </div>
+                  {% endfor %}
+               </div>
+               <button
+                  class="carousel-control-prev"
+                  type="button"
+                  data-mdb-target="#carouselExampleCaptions"
+                  data-mdb-slide="prev"
+               >
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+               </button>
+               <button
+                  class="carousel-control-next"
+                  type="button"
+                  data-mdb-target="#carouselExampleCaptions"
+                  data-mdb-slide="next"
+               >
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+               </button>
+            </div>
+         </section>
+      </div>
+
+      <!-- Ad Booking -->
+      <div class="col-lg-4 col-md-12">
+         <section class="ad-show__book">
+            <div class="card">
+               <img 
+                  src="/uploads/thumbnails/{{ ad.thumbnail }}" 
+                  alt="Photo de couverture du logement" 
+                  class="card-img-top"
+               >
+               <div class="card-body">
+                  <div class="card-title my-3">
+                     <strong class="display-6">${{ ad.price }}</strong> / nuit, 
+                     <strong>{{ ad.rooms }}</strong> chambres à <strong>{{ ad.city }}</strong>
+                  </div>
+                  <a href="#!" class="btn btn-primary d-block">Réserver dès maintenant</a>
+               </div>
+            </div>
+         </section>
+      </div>
+   </div>
+</div>
+
+{# The description, top ads and his owner #}
+<div class="container">
+   {# Description #}
+   <div class="row">
+      <div class="col-lg-8 col-md-12">
+         <section class="ad-show__description">
+            <h4>Description</h4>
+            <p>{{ ad.description|raw }}</p>
+         </section>
+      </div>
+   </div>
+
+   {# Owner #}
+   <div class="row mt-3">
+      <div class="col-lg-8 col-md-12">
+         <section class="ad-show__owner" id="ad-show__owner-id">
+            <h4>A propos de propriétaire</h4>
+            <div class="ad-show__owner-details mt-4">
+               <div class="row">
+                  <div class="col-lg-6 col-sm-12">
+                     <div class="row">
+                        <div class="col-lg-4 text-center">
+                           <h6 class="ad-show__owner-name"><a href="#!">{{ ad.owner.fullname }}</a></h6>
+                           <div class="ad-show__owner-avatar">
+                              <a href="#!">
+                                 <img 
+                                    src="/uploads/avatars/{{ ad.owner.avatar }}" class="img-fluid rounded-circle" 
+                                    alt="Avatar de {{ ad.owner.fullname }}"
+                                 >
+                              </a>
+                           </div>
+                        </div>
+                        <div class="col d-flex align-items-center">
+                           <ul class="list-unstyled m-0">
+                              <li>
+                                 <small>
+                                    <i class="fas fa-star me-3 text-warning"></i>
+                                    <strong>4.6</strong> 
+                                    Note
+                                 </small>
+                              </li>
+                              <li>
+                                 <small>
+                                    <i class="fas fa-user me-3 text-warning"></i>
+                                    <strong>20</strong> 
+                                    Voyageurs
+                                 </small>
+                              </li>
+                              <li>
+                                 <small>
+                                    <i class="fas fa-comment me-3 text-warning"></i>
+                                    <strong>15</strong> 
+                                    Commentaires
+                                 </small>
+                              </li>
+                              <li>
+                                 <small>
+                                    <i class="fas fa-house-user me-3 text-warning"></i>
+                                    <strong>{{ ad.owner.ads|length }}</strong> 
+                                    Logements
+                                 </small>
+                              </li>
+                           </ul>
+                        </div>
+                     </div>
+                  </div>
+               </div>  
+               <div class="row mt-2">
+                  <div class="col">
+                     <div class="ad-show__owner-descritption">
+                        <p>{{ ad.owner.description }}</p>
+                     </div>
+                  </div>
+               </div>    
+            </div>
+         </section>
+      </div>
+   </div>
+
+   {# Top ads #}
+   <div class="row my-3">
+      <div class="col-lg-8 col-sm-12">
+         <h4 class="mb-3">Les voyageurs ont loué aussi</h4>
+         <div class="row">
+            {% for i in 0..1 %}
+            <div class="col-lg-6">
+               {% include "cards/ad_card.html.twig" %}
+            </div>
+            {% endfor %}
+         </div>
+      </div>
+   </div>
+</div>
+
+{# Separator #}
+<hr class="container my-5">
+
+{# Comments #}
+<div class="container">
+   <section class="ad-show__comment">
+      <h4 class="mb-3">Feedback des voyageurs</h4>
+      {% for i in 0..10 %}    
+      <div class="row">
+         <div class="col-lg-8">
+            <div class="row">
+               <div class="col-lg-2">
+                  <div class="ad-show__comment-avatar">
+                     <img 
+                        src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" 
+                        class="rounded-circle img-fluid"
+                        alt=""
+                     >
+                  </div>
+               </div>
+               <div class="col">
+                  <div class="ad-show__comment-details">
+                     <h6>Jhon doe</h6>
+                     <span class="ad-show__comment-rating text-warning">
+                        {% for i in 0..4 %}
+                           <i class="fas fa-star"></i>
+                        {% endfor %}
+                     </span>&nbsp;
+                     <small class="ad-show__comment-published-at text-muted">
+                        ça fait 3 jours
+                     </small>
+                     <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus, repudiandae?</p>
+                  </div>
+               </div>
+            </div>
+            {# Separator #}   
+            <hr class="my-3 {% if loop.last %}d-none{% endif %}">
+         </div>
+      </div>
+      {% endfor %}
+   </section>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+   $(document).ready(function() {
+
+      let stickyTop = $('.ad-show__book').offset().top;
+
+      $(window).scroll(function() {
+
+         let windowTop = $(window).scrollTop();
+
+         if (stickyTop < windowTop) {
+            $('.ad-show__book').addClass('sticky');
+         } else {
+            $('.ad-show__book').removeClass('sticky');
+         }
+      });
+   });
+</script>
+{% endblock %}
