@@ -21,15 +21,15 @@ final class Version20210409083752 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE ad (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, description LONGTEXT NOT NULL, rooms SMALLINT NOT NULL, price DOUBLE PRECISION NOT NULL, thumbnail VARCHAR(255) NOT NULL, slug VARCHAR(255) NOT NULL, published_at DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE images (id INT AUTO_INCREMENT NOT NULL, ad_id INT NOT NULL, image VARCHAR(255) NOT NULL, caption VARCHAR(255) NOT NULL, INDEX IDX_E01FBE6A4F34D596 (ad_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('ALTER TABLE images ADD CONSTRAINT FK_E01FBE6A4F34D596 FOREIGN KEY (ad_id) REFERENCES ad (id)');
+        $this->addSql('CREATE TABLE image (id INT AUTO_INCREMENT NOT NULL, ad_id INT NOT NULL, image VARCHAR(255) NOT NULL, caption VARCHAR(255) NOT NULL, INDEX IDX_E01FBE6A4F34D596 (ad_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE image ADD CONSTRAINT FK_E01FBE6A4F34D596 FOREIGN KEY (ad_id) REFERENCES ad (id)');
     }
 
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE images DROP FOREIGN KEY FK_E01FBE6A4F34D596');
+        $this->addSql('ALTER TABLE image DROP FOREIGN KEY FK_E01FBE6A4F34D596');
         $this->addSql('DROP TABLE ad');
-        $this->addSql('DROP TABLE images');
+        $this->addSql('DROP TABLE image');
     }
 }

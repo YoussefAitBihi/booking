@@ -5,18 +5,23 @@
 {% form_theme form _self %}
 
 {% block body %}
-<div class="container mt-5 vh-100">
+<div class="container mt-5">
    <h1 class="display-6">
       Salut, vous êtes dans le point de créer un nouveau compte
    </h1>
    <small class="text-muted">Eh bien, c'est très simple</small>
    <div class="row mt-5 justify-content-center">
-      <div class="col-md-8 col-sm-12">
-         {{ form_start(form) }}
+      <div class="col-md-10 col-sm-12">
+         {{ form_start(form, {
+            'attr': {
+               'class': 'px-3 py-5 border'
+            }
+         }) }}
 
-            <!-- Full name -->
-            <div class="row mb-3">
-               <!-- First name Widget -->
+            <!-- First name & last name fields -->
+            <h6>Infomations de base</h6>
+            <div class="row mb-4">
+               <!-- First name fields -->
                <div class="col">
                   <div class="form-outline">
                      {{ form_widget(form.firstName) }}
@@ -36,7 +41,7 @@
                      class="text-muted {% if form_errors(form.firstName) is not empty %}invisible{% endif %}">Entre <strong>3</strong> et <strong>18</strong> caractères
                   </small>
                </div>
-               <!-- Last name Widget -->
+               <!-- Last name field -->
                <div class="col">
                   <div class="form-outline">
                      {{ form_widget(form.lastName) }}
@@ -58,7 +63,7 @@
                </div>
             </div>
 
-            <!-- Email -->
+            <!-- Email field -->
             <div class="form-outline">
                {{ form_widget(form.email) }}
                {{ form_label(form.email, null, {
@@ -74,8 +79,105 @@
                {% endif %}
             </div>
             <small 
-               class="text-muted {% if form_errors(form.email) is not empty %}invisible{% endif %}">Un <strong>email valide</strong>
+               class="text-muted mb-4 d-inline-block {% if form_errors(form.email) is not empty %}invisible{% endif %}">Un <strong>email valide</strong>
             </small>
+
+            <!-- Password and password confirm fields -->
+            <div class="row mb-4">
+               <div class="col">
+                  <div class="form-outline">
+                     {{ form_widget(form.password) }}
+                     <i class="fa fa-eye toggle-password" data-toggle="#{{ form.password.vars.id }}"></i>
+                     {{ form_label(form.password, null, {
+                        'label_attr': {
+                           'class': 'form-label'
+                        }
+                     }) }}
+                     <small class="form-help">{{ form_help(form.password) }}</small>
+                     {% if form_errors(form.password) is not empty %}
+                        <div class="form-error mt-3">
+                           {{ form_errors(form.password) }}
+                        </div>
+                     {% endif %}
+                  </div>
+                  <small 
+                     class="text-muted {% if form_errors(form.password) is not empty %}invisible{% endif %}">
+                     Entre <strong>8</strong> et <strong>25</strong> caractères
+                  </small>
+               </div>
+               <!-- Password Confirm -->
+               <div class="col">
+                  <div class="form-outline">
+                     {{ form_widget(form.passwordConfirm) }}
+                     <i class="fa fa-eye toggle-password" data-toggle="#{{ form.passwordConfirm.vars.id }}"></i>
+                     {{ form_label(form.passwordConfirm, null, {
+                        'label_attr': {
+                           'class': 'form-label'
+                        }
+                     }) }}
+                     <small class="form-help">{{ form_help(form.passwordConfirm) }}</small>
+                     {% if form_errors(form.passwordConfirm) is not empty %}
+                        <div class="form-error mt-3">
+                           {{ form_errors(form.passwordConfirm) }}
+                        </div>
+                     {% endif %}
+                  </div>
+                  <small 
+                     class="text-muted {% if form_errors(form.passwordConfirm) is not empty %}invisible{% endif %}">
+                     Entre <strong>8</strong> et <strong>25</strong> caractères
+                  </small>
+               </div>
+            </div>   
+            
+            <hr class="my-4">
+
+            <h6>Photo de profil</h6>
+            <!-- Avatar Field -->
+            <div class="form-outline">
+               {{ form_widget(form.avatar) }}
+               {{ form_label(form.avatar, null, {
+                  'label_attr': {
+                     'class': 'form-label'
+                  }
+               }) }}
+               <small class="form-help">{{ form_help(form.avatar) }}</small>
+               {% if form_errors(form.avatar) is not empty %}
+                  <div class="form-error mt-3">
+                     {{ form_errors(form.avatar) }}
+                  </div>
+               {% endif %}
+            </div>
+            <small 
+               class="text-muted mb-4 d-inline-block {% if form_errors(form.avatar) is not empty %}invisible{% endif %}">
+               <strong>2MO</strong> / <strong>JPEG</strong>
+            </small>
+
+            <!-- Divider -->
+            <hr class="my-4">
+
+            <h6>Vous êtes dans le point d'ajouter une superbe description qui vous représente</h6>
+
+            <!-- Description field -->
+            <div class="form-outline">
+               {{ form_widget(form.description) }}
+               <small class="form-help">{{ form_help(form.description) }}</small>
+               {% if form_errors(form.description) is not empty %}
+                  <div class="form-error mt-3">
+                     {{ form_errors(form.description) }}
+                  </div>
+               {% endif %}
+            </div>
+            <small 
+               class="text-muted mb-5 d-inline-block {% if form_errors(form.description) is not empty %}invisible{% endif %}">
+               Plus de <strong>300</strong> caractères
+            </small>
+
+            <!-- Button submit -->
+            <button class="btn btn-primary w-100 d-inline-block">
+               <i class="fas fa-user-plus mr-2"></i>
+               S'inscrire
+            </button>
+         {{ form_end(form) }}
       </div>
    </div>
 </div>

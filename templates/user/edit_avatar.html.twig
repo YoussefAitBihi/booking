@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+   Edition de photo de profile
+{% endblock %}
+
+{% form_theme form _self %}
+
+{% block body %}
+<div class="container mt-5">
+   <div class="row align-items-center">
+      <!-- User's profile -->
+      <div class="col-md-3">
+         {{ include('side nav/side-nav-profile.html.twig') }}
+      </div>
+      <!-- Edit form -->
+      <div class="col-md-9">
+         <div class="row justify-content-center">
+            <div class="col-md-10">
+               <div class="user-edit__avatar">
+                  <div class="user-edit__avatar-heading text-center mb-5">
+                     <h4>Photo de profil public</h4>
+                     <p>Vous pouvez modifier votre photo de profil en mettant une autre photo sympa</p>
+                  </div>
+                  <div class="user-edit__avatar-form-edit">
+                     {{ form_start(form) }}
+                        <p class="mb-2">
+                           Cliquer sur <strong>browse</strong> afin que vous puissiez la modifier
+                        </p>
+                        <!-- Avatar field -->
+                        <div class="form-outline">
+                           {{ form_widget(form.avatar) }}
+                           {{ form_label(form.avatar, null, {
+                              'label_attr': {
+                                 'class': 'form-label'
+                              }
+                           }) }}
+                           <small class="form-help">{{ form_help(form.avatar) }}</small>
+                           {% if form_errors(form.avatar) is not empty %}
+                              <div class="form-error mt-3">
+                                 {{ form_errors(form.avatar) }}
+                              </div>
+                           {% endif %}
+                        </div>
+                        <small 
+                           class="text-muted mb-4 d-inline-block {% if form_errors(form.avatar) is not empty %}invisible{% endif %}"><strong>JPEG / 2MO</strong>
+                        </small>
+
+                        <!-- Backup button -->
+                        <button class="btn btn-primary d-block">
+                           <i class="fas fa-save mr-2"></i>
+                           Sauvegarder
+                        </button>
+                     {{ form_end(form) }}
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}

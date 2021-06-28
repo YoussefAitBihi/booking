@@ -37,8 +37,6 @@
    <body>
       <!-- Header block -->
       {{ include('/partials/header.html.twig') }}
-
-      <div class="clearfix">...</div>
             
       {# Flash message #}
       <div class="flash-message">
@@ -80,5 +78,7 @@
       type="text/javascript"
       src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js">
    </script>
+   <!-- Our script -->
+   <script src="/js/script.js"></script>
    {% block javascripts %}{% endblock %}
 </html>

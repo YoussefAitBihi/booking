@@ -65,8 +65,8 @@ class AdController extends AbstractController
             // New file name
             $newFilename = $uploader
                                 ->upload(
-                                        $thumbnail, 
-                                        $this->getParameter('thumbnails_directory')
+                                    $thumbnail, 
+                                    $this->getParameter('thumbnails_directory')
                                 );
 
             // Set Thumbnail

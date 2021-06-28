@@ -3,17 +3,24 @@
 namespace App\Entity;
 
 use DateTime;
+use DateTimeInterface;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity(
+ *  fields={"email"},
+ *  message="Cette addrese s'est déjà inscrit par un autre compte, veuillez taper un autre email"
+ * )
  */
 class User implements UserInterface
 {
@@ -26,23 +33,51 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *  min=3,
+     *  max=18,
+     *  minMessage="Le prénom doit faire au moins {{ limit }} caractères",
+     *  maxMessage="Le prénom ne doit pas dépasser {{ limit }} caractères"
+     * )
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *  min=3,
+     *  max=18,
+     *  minMessage="Le nom doit faire au moins {{ limit }} caractères",
+     *  maxMessage="Le nom ne doit pas dépasser {{ limit }} caractères"
+     * )
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email(message="Veuillez taper un email valide")
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *  groups={"account_register"},
+     *  min=8,
+     *  max=25,
+     *  minMessage="Le mot de passe doit faire au moins {{ limit }} caractères",
+     *  maxMessage="Le mot de passe ne doit pas dépasser {{ limit }} caractères"
+     * )
      */
     private $password;
+
+    /**
+     * @Assert\IdenticalTo(
+     *  propertyPath="password",
+     *  message="Veuillez confimer correctement le mot de passe"
+     * )
+     */
+    public $passwordConfirm;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -51,6 +86,10 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(
+     *  min=300,
+     *  minMessage="La description doit faire au moins {{ limit }} caractères"
+     * )
      */
     private $description;
 
@@ -171,6 +210,18 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getPasswordConfirm(): ?string
+    {
+        return $this->passwordConfirm;
+    }
+
+    public function setConfirmPassword(string $passwordConfirm): self
+    {
+        $this->passwordConfirm = $passwordConfirm;
+
+        return $this;
+    }
+
     public function getAvatar(): ?string
     {
         return $this->avatar;
@@ -207,12 +258,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 

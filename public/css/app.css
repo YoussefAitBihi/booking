@@ -8,6 +8,14 @@
    background-color: rgba(0, 0, 0, .16);
 }
 
+.vertical-separator {
+   width: 1px;
+   /* border-right: 1px solid inherit; */
+   height: 100%;
+   margin: auto;
+   background-color: #d4d4d4;
+}
+
 .sticky {
    position: fixed;
    top: 30px;
@@ -24,6 +32,12 @@
 i.fas {
    width: 15px !important;
    height: 15px !important;
+}
+
+.toggle-password {
+   position: absolute;
+   top: calc(50% - 8px);
+   right: 10px;
 }
 
 .img-fluid {

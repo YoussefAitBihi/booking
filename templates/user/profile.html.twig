@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+   {{ user.fullname }}
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+   <div class="row">
+      <!-- User's infos -->
+      <div class="col-md-3 col-sm-12">
+         <div class="user-profile__infos">
+            <div class="user-profile__infos-avatar text-center">
+               <img 
+                  src="/uploads/avatars/{{ user.avatar }}" 
+                  alt="Photo de profil de {{ user.fullname }}"
+                  class="p-1 border rounded-circle mb-3">
+               <h6>{{ user.fullname }}</h6>
+            </div>
+            <hr class="my-3">
+            <div class="user-profile__infos-details">
+               <ul class="list-group list-unstyled">
+                  <li class="py-2">
+                     <i class="fas fa-star mr-3 text-warning"></i>
+                     <strong>4.6</strong> Note de propriétaire
+                  </li>
+                  <li class="py-2">
+                     <i class="fas fa-house-user mr-3 text-warning"></i>
+                     <strong>
+                     {% if user.ads|length > 0 %}
+                        {{ user.ads|length }}
+                     {% else %}
+                        --
+                     {% endif %}
+                     </strong> 
+                     Total de logements
+                  </li>
+                  <li class="py-2">
+                     <i class="fas fa-user mr-3 text-warning"></i>
+                     <strong>10</strong> Total de voyageurs
+                  </li>
+                  <li class="py-2">
+                     <i class="fas fa-comment mr-3 text-warning"></i>
+                     <strong>10</strong> Total de commentaires
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="col-md-1">
+         <div class="vertical-separator"></div>
+      </div>
+      <!-- User's description -->
+      <div class="col-md-8 col-sm-12">
+         <div class="user-profile__description">
+            <h3>Informations personnelles</h3>
+            <p>{{ user.description|raw }}</p>
+         </div>
+      </div>
+   </div>
+   <div class="row justify-content-end">
+      <div class="col-md-8">
+         <hr class="my-5">
+         <div class="user-profile__ads">
+            {% if user.ads|length > 0 %}
+            <div class="row">
+               <h6 class="mb-2">Mes annonces ({{ user.ads|length }})</h6>
+               {% for ad in user.ads %}
+               <div class="col-md-6 mb-3">
+                  {{ include('cards/ad_card.html.twig') }}
+               </div>
+               {% endfor %}
+            </div>
+            {% else %}
+            <p>Vous n'avez pas encore d'annonces à afficher. vous pouvez dès maintenant créer une annonce</p>
+            <a 
+               href="{{ path('ad_create') }}"
+               class="btn btn-primary">
+               <i class="fas fa-plus mr-2"></i>
+               Créer une annonce
+            </a>
+            {% endif %}
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}

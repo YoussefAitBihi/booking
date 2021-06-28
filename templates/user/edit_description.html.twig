@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+   Edition de description
+{% endblock %}
+
+{% form_theme form _self %}
+
+{% block body %}
+<div class="container mt-5">
+   <div class="row align-items-center">
+      <!-- User's profile -->
+      <div class="col-md-3">
+         {{ include('side nav/side-nav-profile.html.twig') }}
+      </div>
+      <!-- Edit form -->
+      <div class="col-md-9">
+         <div class="row justify-content-center">
+            <div class="col-md-10">
+               <div class="user-edit__description">
+                  <div class="user-edit__description-heading text-center mb-5">
+                     <h4>Description de profil public</h4>
+                     <p>Vous pouvez modifier votre description de profil en mettant une autre superbe description</p>
+                  </div>
+                  <div class="user-edit__description-form-edit">
+                     {{ form_start(form) }}
+                        <h6 class="mb-2">Description</h6>
+                        <!-- Avatar field -->
+                        <div class="form-outline">
+                           {{ form_widget(form.description) }}
+                           <small class="form-help">{{ form_help(form.description) }}</small>
+                           {% if form_errors(form.description) is not empty %}
+                              <div class="form-error mt-3">
+                                 {{ form_errors(form.description) }}
+                              </div>
+                           {% endif %}
+                        </div>
+                        <small 
+                           class="text-muted mb-4 d-inline-block {% if form_errors(form.description) is not empty %}invisible{% endif %}">Plus de <strong>300</strong> caractères
+                        </small>
+
+                        <!-- Backup button -->
+                        <button class="btn btn-primary d-block">
+                           <i class="fas fa-save mr-2"></i>
+                           Sauvegarder
+                        </button>
+                     {{ form_end(form) }}
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}

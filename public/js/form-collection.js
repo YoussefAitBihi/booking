@@ -12,7 +12,7 @@ $(function() {
 
          let confirm = window.confirm("Voulez-vous vraiment supprimer cet objet ?");
 
-         if (confirm == true) {
+         if (confirm === true) {
             $('#' + AD_REMOVE_IMAGE_ID).remove();
          }
          

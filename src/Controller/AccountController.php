@@ -5,24 +5,92 @@ namespace App\Controller;
 use Exception;
 use App\Entity\User;
 use App\Form\AccountType;
+use App\Repository\UserRepository;
+use App\Service\Uploader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AccountController extends AbstractController
 {
     
     /**
-     * Permet de faire la connexion
+     * Allow to create an account
+     * 
+     * @Route("/account/register", name="account_register")
+     *
+     * @param Request $request
+     * @param Uploader $uploader
+     * @param UserPasswordEncoderInterface $encoder
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
+    public function create(
+        Request $request,
+        UserPasswordEncoderInterface $encoder,
+        Uploader $uploader,
+        EntityManagerInterface $manager
+    ): Response
+    {
+        // new user
+        $user = new User();
+
+        // Create form object and handle it
+        $form = $this
+                    ->createForm(AccountType::class, $user)
+                    ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Password encoding
+
+            $password = $user->getPassword();
+            $encodedPassword = $encoder->encodePassword(
+                $user,
+                $password
+            );
+
+            $user->setPassword($encodedPassword);
+
+            /** @var UploadedFile $avatar contains the user's picture */
+            $avatar = $form->get('avatar')->getData();
+
+            $newFilename = $uploader->upload(
+                                        $avatar,
+                                        $this->getParameter('avatar_directory')
+            );
+
+            $user->setAvatar($newFilename);
+
+            $manager->persist($user);
+            $manager->flush();
+
+            $this->addFlash(
+                "success",
+                "Votre compte a été bien crée avec succès, veuillez donc vous connecter"
+            );
+
+            return $this->redirectToRoute("account_login");
+        }
+
+        return $this->render("/account/new.html.twig", [
+            'form' => $form->createView()
+        ]);
+    }
+    
+    /**
+     * Allow to make the connection
      * 
      * @Route("/account/login", name="account_login")
      * 
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
      */
-    public function index(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // The last user name
         $lastUsername = $authenticationUtils->getLastUsername();
@@ -48,25 +116,4 @@ class AccountController extends AbstractController
         throw new Exception("N'oubliez pas de bien définir le paramètre logout dans le fichier security.yaml");
     }
 
-    /**
-     * Allow to create an account
-     * 
-     * @Route("/account/register", name="account_register")
-     *
-     * @return Response
-     */
-    public function create(Request $request): Response
-    {
-        // new user
-        $user = new User();
-
-        // Create form object and handle it
-        $form = $this
-                    ->createForm(AccountType::class, $user)
-                    ->handleRequest($request);
-
-        return $this->render("/account/new.html.twig", [
-            'form' => $form->createView()
-        ]);
-    }
 }

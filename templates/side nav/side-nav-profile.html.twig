@@ -1,0 +1,48 @@
+{% set currenPath = app.request.get('_route') %}
+<div class="user-edit__side-bar">
+   <!-- User's avatar -->
+   <div class="user-edit__side-bar_avatar text-center">
+      <img 
+         src="/uploads/avatars/{{ user.avatar }}" 
+         alt="Photo de profil de {{ user.fullname }}"
+         class="rounded-circle mb-3"
+      >
+      <h6>{{ user.fullname }}</h6>
+   </div>
+   <!-- User's options -->
+   <div class="user-edit__side-bar-options mt-4">
+      <div class="list-group list-group-flush">
+         <a 
+            href="{{ path('account_profile', {'slug': user.slug}) }}" 
+            class="list-group-item list-group-item-action" 
+            aria-current="true"
+         >
+            Voir mon profil
+         </a>
+         <a
+            href="{{ path('account_edit_infos') }}" 
+            class="list-group-item list-group-item-action {% if currenPath == 'account_edit_infos'%}active{% endif %}" 
+         >
+            Editer mon Profil
+         </a>
+         <a 
+            href="{{ path('account_edit_avatar') }}" 
+            class="list-group-item list-group-item-action {% if currenPath == 'account_edit_avatar' %}active{% endif %}" 
+         >
+            Changer la photo
+         </a>
+         <a 
+            href="{{ path('account_edit_password') }}" 
+            class="list-group-item list-group-item-action {% if currenPath == 'account_edit_password' %}active{% endif %}" 
+         >
+            Changer le mot de passe
+         </a>
+         <a 
+            href="{{ path('account_edit_description') }}" 
+            class="list-group-item list-group-item-action {% if currenPath == 'account_edit_description' %}active{% endif %}" 
+         >
+            Changer la description
+         </a>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+   Edition d'informations de base
+{% endblock %}
+
+{% form_theme form _self %}
+
+{% block body %}
+<div class="container mt-5">
+   <div class="row align-items-center">
+      <!-- User's profile -->
+      <div class="col-md-3">
+         {{ include('side nav/side-nav-profile.html.twig') }}
+      </div>
+      <!-- Edit form -->
+      <div class="col-md-9">
+         <div class="row justify-content-center">
+            <div class="col-md-10">
+               <div class="user-edit__profile">
+                  <div class="user-edit__profile-heading text-center mb-5">
+                     <h4>Profil public</h4>
+                     <p>Vous pouvez modifier vos informations de base qui vous concernent</p>
+                  </div>
+                  <div class="user-edit__profile-form-edit">
+                     {{ form_start(form) }}
+                        <!-- First name & last name fields -->
+                        <h6 class="mb-3">Informations de base</h6>
+                        <div class="row mb-4">
+                           <!-- First name fields -->
+                           <div class="col">
+                              <div class="form-outline">
+                                 {{ form_widget(form.firstName) }}
+                                 {{ form_label(form.firstName, null, {
+                                    'label_attr': {
+                                       'class': 'form-label'
+                                    }
+                                 }) }}
+                                 <small class="form-help">{{ form_help(form.firstName) }}</small>
+                                 {% if form_errors(form.firstName) is not empty %}
+                                    <div class="form-error mt-3">
+                                       {{ form_errors(form.firstName) }}
+                                    </div>
+                                 {% endif %}
+                              </div>
+                              <small 
+                                 class="text-muted {% if form_errors(form.firstName) is not empty %}invisible{% endif %}">Entre <strong>3</strong> et <strong>18</strong> caractères
+                              </small>
+                           </div>
+                           <!-- Last name field -->
+                           <div class="col">
+                              <div class="form-outline">
+                                 {{ form_widget(form.lastName) }}
+                                 {{ form_label(form.lastName, null, {
+                                    'label_attr': {
+                                       'class': 'form-label'
+                                    }
+                                 }) }}
+                                 <small class="form-help">{{ form_help(form.lastName) }}</small>
+                                 {% if form_errors(form.lastName) is not empty %}
+                                    <div class="form-error mt-3">
+                                       {{ form_errors(form.lastName) }}
+                                    </div>
+                                 {% endif %}
+                              </div>
+                              <small 
+                                 class="text-muted {% if form_errors(form.firstName) is not empty %}invisible{% endif %}">Entre <strong>3</strong> et <strong>18</strong> caractères
+                              </small>
+                           </div>
+                        </div>
+      
+                        <!-- Email field -->
+                        <div class="form-outline">
+                           {{ form_widget(form.email) }}
+                           {{ form_label(form.email, null, {
+                              'label_attr': {
+                                 'class': 'form-label'
+                              }
+                           }) }}
+                           <small class="form-help">{{ form_help(form.email) }}</small>
+                           {% if form_errors(form.email) is not empty %}
+                              <div class="form-error mt-3">
+                                 {{ form_errors(form.email) }}
+                              </div>
+                           {% endif %}
+                        </div>
+                        <small 
+                           class="text-muted mb-4 d-inline-block {% if form_errors(form.email) is not empty %}invisible{% endif %}">Un <strong>email valide</strong>
+                        </small>
+
+                        <!-- Keep button -->
+                        <button class="btn btn-primary d-block">
+                           <i class="fas fa-save mr-2"></i>
+                           Sauvegarder
+                        </button>
+                     {{ form_end(form) }}
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}
