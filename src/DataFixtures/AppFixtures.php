@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Ad;
 use Faker\Factory;
+use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\Image;
 use Doctrine\Persistence\ObjectManager;
@@ -66,6 +67,34 @@ class AppFixtures extends Fixture
                 }
             }
         }
+
+        // Admin role
+        $roleAdmin = new Role();
+
+        $roleAdmin->setTitle('ROLE_ADMIN');
+
+        $manager->persist($roleAdmin);
+
+        // Fake Admin
+        $userAdmin = new User();
+
+        $userAdmin
+            ->setFirstName("Youssef")
+            ->setLastName("El yaâkoubi")
+            ->setEmail("youssefelyaakoubi@gmail.com")
+            ->setPassword($this->encoder->encodePassword(
+                $userAdmin,
+                "youssefelyaakoubi"
+            ))
+            ->setAvatar($faker->file(
+                P_D . '/tmp avatars',
+                P_D . '/public/uploads/avatars',
+                false
+            ))
+            ->setDescription($faker->paragraphs(mt_rand(4,6), true))
+            ->addUserRole($roleAdmin);
+
+        $manager->persist($userAdmin);
 
         // Fake users
         for ($i = 0; $i < 20; $i++) {

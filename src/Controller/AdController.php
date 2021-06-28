@@ -13,15 +13,18 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdController extends AbstractController
 {
 
     /**
-     * Create new ad
+     * Create a new ad
      * 
      * @Route("/ad/new", name="ad_create", methods={"GET", "POST"})
+     * @IsGranted("ROLE_USER")
      *
      * @param Request $request
      * @param Uploader $uploader
@@ -36,6 +39,9 @@ class AdController extends AbstractController
     {
         // Create a new Ad
         $ad = new Ad();
+
+        // User connected
+        $user = $this->getUser();
 
         // Creating form object and handling request
         $form = $this
@@ -69,8 +75,10 @@ class AdController extends AbstractController
                                     $this->getParameter('thumbnails_directory')
                                 );
 
-            // Set Thumbnail
-            $ad->setThumbnail($newFilename);
+            // Set Thumbnail and owner
+            $ad
+                ->setThumbnail($newFilename)
+                ->setOwner($user);
 
             $entityManager->persist($ad);
             $entityManager->flush();
@@ -96,7 +104,7 @@ class AdController extends AbstractController
      * Show an ad via Slug and Id
      * 
      * @Route("/ad/{id}-{slug}", name="ad_show", methods={"GET"})
-     *
+     * 
      * @param Ad $ad
      * @return Response
      */
@@ -111,6 +119,7 @@ class AdController extends AbstractController
      * Retrieve ad via his slug and id and edit it 
      * 
      * @Route("/ad/{id}-{slug}/edit", name="ad_edit")
+     * @Security("is_granted('ROLE_USER') and user === ad.getOwner()", message="vous ne pouvez pas modifier cette annonce, car il ne vous appartient pas")
      *
      * @param Ad $ad
      * @param Request $request
@@ -205,6 +214,7 @@ class AdController extends AbstractController
      * Allow to delete an ad via id and slug
      * 
      * @Route("/ad/{id}-{slug}/delete", name="ad_delete")
+     * @Security("is_granted('ROLE_USER') and user === ad.getOwner()", message="Vous ne pouvez pas supprimer cette annonce, car il ne vous appartient pas")
      *
      * @param Ad $ad
      * @param EntityManagerInterface $entityManager

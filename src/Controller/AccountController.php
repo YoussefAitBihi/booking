@@ -5,16 +5,17 @@ namespace App\Controller;
 use Exception;
 use App\Entity\User;
 use App\Form\AccountType;
-use App\Repository\UserRepository;
 use App\Service\Uploader;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 class AccountController extends AbstractController
 {
@@ -23,6 +24,7 @@ class AccountController extends AbstractController
      * Allow to create an account
      * 
      * @Route("/account/register", name="account_register")
+     * @IsGranted("IS_ANONYMOUS")
      *
      * @param Request $request
      * @param Uploader $uploader
@@ -30,7 +32,7 @@ class AccountController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    public function create(
+    public function register(
         Request $request,
         UserPasswordEncoderInterface $encoder,
         Uploader $uploader,
@@ -86,6 +88,7 @@ class AccountController extends AbstractController
      * Allow to make the connection
      * 
      * @Route("/account/login", name="account_login")
+     * @IsGranted("IS_ANONYMOUS")
      * 
      * @param AuthenticationUtils $authenticationUtils
      * @return Response

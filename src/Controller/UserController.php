@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Service\Uploader;
 use App\Entity\PasswordUpdate;
 use App\Form\AccountInfosEditionType;
+use Symfony\Component\Form\FormError;
 use App\Form\AccountAvatarEditionType;
 use App\Form\AccountPasswordEditionType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,8 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
@@ -25,6 +26,7 @@ class UserController extends AbstractController
      * Allow to a user to edit its profile
      *
      * @Route("/user/edit-profile", name="account_edit_infos")
+     * @IsGranted("ROLE_USER")
      * 
      * @param EntityManagerInterface $manager
      * @param Request $request
@@ -64,6 +66,7 @@ class UserController extends AbstractController
      * Allow to edit user's avatar
      * 
      * @Route("/user/edit-avatar", name="account_edit_avatar")
+     * @IsGranted("ROLE_USER")
      *
      * @param Request $request
      * @param Uploader $uploader
@@ -119,7 +122,8 @@ class UserController extends AbstractController
      * Allow to edit user's description
      * 
      * @Route("/user/edit-description", name="account_edit_description")
-     *
+     * @IsGranted("ROLE_USER")
+     * 
      * @param Request $request
      * @param EntityManagerInterface $manager
      * @return Response
@@ -159,6 +163,7 @@ class UserController extends AbstractController
      * Allow to edit user's password
      * 
      * @Route("/user/edit-password", name="account_edit_password")
+     * @IsGranted("ROLE_USER")
      *
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
@@ -220,7 +225,7 @@ class UserController extends AbstractController
      * Allow to show the user's profile
      * 
      * @Route("/user/{slug}", name="account_profile")
-     *
+     * 
      * @param User $user
      * @return Response
      */

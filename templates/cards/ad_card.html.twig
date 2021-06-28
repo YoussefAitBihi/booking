@@ -52,6 +52,34 @@
             <strong class="text-muted">(100)</strong>
          </small>
       </div>
-      <small><a href="{{ url }}">Voir plus</a></small>
+      <small class="{% if app.user and app.user == ad.owner %}d-none{% endif %}"><a href="{{ url }}">Voir plus</a></small>
+      {% if app.user and app.user == ad.owner %}   
+      <!-- Action -->
+      <div class="dropdown">
+         <i
+            class="fas fa-pen"
+            href="#"
+            role="button"
+            id="dropdownMenuLink"
+            data-mdb-toggle="dropdown"
+            aria-expanded="false">
+         </i>
+      
+         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li>
+               <a class="dropdown-item" href="#">
+                  <i class="fas fa-pen mr-2"></i>
+                  Modifier l'annonce
+               </a>
+            </li>
+            <li>
+               <a class="dropdown-item" href="#">
+                  <i class="fas fa-trash mr-2"></i>
+                  Supprimer l'annonce
+               </a>
+            </li>
+         </ul>
+      </div>
+      {% endif %}
    </div>
 </div>

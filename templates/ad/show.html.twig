@@ -11,6 +11,36 @@
 >
    <div class="overlay d-flex align-items-center">
       <div class="container">
+         {% if app.user and app.user == ad.owner %}
+            <!-- Action -->
+            <div class="dropdown ad-show__action">
+               <a
+                  class="btn btn-primary dropdown-toggle"
+                  href="#"
+                  role="button"
+                  id="dropdownMenuLink"
+                  data-mdb-toggle="dropdown"
+                  aria-expanded="false"
+               >
+               Action
+               </a>
+            
+               <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                  <li>
+                     <a class="dropdown-item" href="#">
+                        <i class="fas fa-pen mr-2"></i>
+                        Modifier l'annonce
+                     </a>
+                  </li>
+                  <li>
+                     <a class="dropdown-item" href="#">
+                        <i class="fas fa-trash mr-2"></i>
+                        Supprimer l'annonce
+                     </a>
+                  </li>
+               </ul>
+            </div>
+         {% endif %}
          <h1>{{ ad.title }}</h1>
          <p>{{ ad.introduction }}</p>
          <div class="ad-show__rating">
@@ -138,9 +168,13 @@
                   <div class="col-lg-6 col-sm-12">
                      <div class="row">
                         <div class="col-lg-4 text-center">
-                           <h6 class="ad-show__owner-name"><a href="#!">{{ ad.owner.fullname }}</a></h6>
+                           <h6 class="ad-show__owner-name">
+                              <a 
+                                 href="{{ path('account_profile', {'slug': ad.owner.slug}) }}">{{ ad.owner.fullname }}
+                              </a>
+                           </h6>
                            <div class="ad-show__owner-avatar">
-                              <a href="#!">
+                              <a href="{{ path('account_profile', {'slug': ad.owner.slug}) }}">
                                  <img 
                                     src="/uploads/avatars/{{ ad.owner.avatar }}" class="img-fluid rounded-circle" 
                                     alt="Avatar de {{ ad.owner.fullname }}"
@@ -174,7 +208,13 @@
                               <li>
                                  <small>
                                     <i class="fas fa-house-user me-3 text-warning"></i>
-                                    <strong>{{ ad.owner.ads|length }}</strong> 
+                                    <strong>
+                                    {% if ad.owner.ads|length > 0 %}
+                                       {{ ad.owner.ads|length }}
+                                    {% else %}
+                                       --
+                                    {% endif %}
+                                    </strong> 
                                     Logements
                                  </small>
                               </li>
