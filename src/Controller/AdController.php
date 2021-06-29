@@ -59,7 +59,7 @@ class AdController extends AbstractController
                 $newFilename = $uploader
                                     ->upload(
                                         $image, 
-                                        $this->getParameter('slider_directory')
+                                        $this->getParameter('sliders_directory')
                                     );
 
                 $element->setImage($newFilename);
@@ -153,7 +153,7 @@ class AdController extends AbstractController
             // Remove image of slider
             foreach ($ad->getImages() as $image) {
                 if (!$slider->contains($image->getImage())) {
-                    $dir_sliders = $this->getParameter('slider_directory') . "/public/uploads/sliders";
+                    $dir_sliders = $this->getParameter('sliders_directory') . "/public/uploads/sliders";
                     unlink($dir_sliders . DIRECTORY_SEPARATOR . $image->getImage());
                     $entityManager->remove($image);
                 }
@@ -170,7 +170,7 @@ class AdController extends AbstractController
                     $newFilename = $uploader
                                         ->upload(
                                             $image,
-                                            $this->getParameter('slider_directory')
+                                            $this->getParameter('sliders_directory')
                                         );
     
                     $element->setImage($newFilename);
@@ -183,7 +183,7 @@ class AdController extends AbstractController
             if ($thumbnail instanceof UploadedFile) {
                 $newFilename = $uploader->upload(
                                             $thumbnail,
-                                            $this->getParameter('thumbnail_directory')
+                                            $this->getParameter('thumbnails_directory')
                 );
 
                 $ad->setThumbnail($newFilename);
@@ -229,21 +229,21 @@ class AdController extends AbstractController
         $thumbnail = $ad->getThumbnail();
 
         // Array contains all thumbnails
-        $thumbnails = scandir($this->getParameter('thumbnail_directory'));
+        $thumbnails = scandir($this->getParameter('thumbnails_directory'));
 
         if (!empty($thumbnails) && in_array($thumbnail, $thumbnails)) {
-            if (is_file($this->getParameter('thumbnail_directory') . DIRECTORY_SEPARATOR . $thumbnail)) {
-                unlink($this->getParameter('thumbnail_directory') . DIRECTORY_SEPARATOR . $thumbnail);
+            if (is_file($this->getParameter('thumbnails_directory') . DIRECTORY_SEPARATOR . $thumbnail)) {
+                unlink($this->getParameter('thumbnails_directory') . DIRECTORY_SEPARATOR . $thumbnail);
             }
         }
         
         // Deleting All images
-        $images = scandir($this->getParameter('slider_directory'));
+        $images = scandir($this->getParameter('sliders_directory'));
 
         if (!empty($images)) {
             foreach ($ad->getImages() as $image) {
                 if (in_array($image->getImage(), $images)) {
-                    unlink($this->getParameter('slider_directory') . DIRECTORY_SEPARATOR . $image->getImage());
+                    unlink($this->getParameter('sliders_directory') . DIRECTORY_SEPARATOR . $image->getImage());
                 }
             }
         }

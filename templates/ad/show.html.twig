@@ -13,7 +13,7 @@
       <div class="container">
          {% if app.user and app.user == ad.owner %}
             <!-- Action -->
-            <div class="dropdown ad-show__action">
+            <div class="dropdown ad-show__action action-button">
                <a
                   class="btn btn-primary dropdown-toggle"
                   href="#"
@@ -27,13 +27,18 @@
             
                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                   <li>
-                     <a class="dropdown-item" href="#">
+                     <a 
+                        class="dropdown-item" 
+                        href="{{ path('ad_edit', {'id': ad.id, 'slug': ad.slug}) }}">
                         <i class="fas fa-pen mr-2"></i>
                         Modifier l'annonce
                      </a>
                   </li>
                   <li>
-                     <a class="dropdown-item" href="#">
+                     <a 
+                        class="dropdown-item" 
+                        href="{{ path('ad_delete', {'id': ad.id, 'slug': ad.slug}) }}"
+                        onclick="return confirm('Voulez-vous vraiment supprimer cette annonce `{{ ad.title }}`?')">
                         <i class="fas fa-trash mr-2"></i>
                         Supprimer l'annonce
                      </a>

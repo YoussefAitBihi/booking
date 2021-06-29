@@ -35,7 +35,7 @@ class Ad
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(
      *  min=10,
-     *  max=255,
+     *  max=100,
      *  minMessage="Le titre de votre annonce doit faire au moins {{ limit }} caractères",
      *  maxMessage="Le titre de votre annonce ne doit pas dépasser {{ limit }} caractères"
      * )

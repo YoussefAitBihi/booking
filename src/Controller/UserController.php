@@ -53,7 +53,9 @@ class UserController extends AbstractController
                 "Vos informations de base a été mis à jour avec succès. Veuillez donc vous reconnecter"
             );
 
-            return $this->redirectToRoute("account_login");
+            return $this->redirectToRoute("account_profile", [
+                'slug' => $user->getSlug()
+            ]);
         }
 
         return $this->render('user/edit_infos.html.twig', [
@@ -93,7 +95,7 @@ class UserController extends AbstractController
             if ($avatar instanceof UploadedFile) {
                 $newFilename = $uploader->upload(
                     $avatar,
-                    $this->getParameter('avatar_directory')
+                    $this->getParameter('avatars_directory')
                 );
 
                 $user->setAvatar($newFilename);

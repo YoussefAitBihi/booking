@@ -72,13 +72,17 @@
                {% endfor %}
             </div>
             {% else %}
-            <p>Vous n'avez pas encore d'annonces à afficher. vous pouvez dès maintenant créer une annonce</p>
-            <a 
-               href="{{ path('ad_create') }}"
-               class="btn btn-primary">
-               <i class="fas fa-plus mr-2"></i>
-               Créer une annonce
-            </a>
+               {% if app.user == user %}
+                  <p>Vous n'avez pas encore d'annonces à afficher. vous pouvez dès maintenant créer une annonce</p>
+                  <a 
+                     href="{{ path('ad_create') }}"
+                     class="btn btn-primary">
+                     <i class="fas fa-plus mr-2"></i>
+                     Créer une annonce
+                  </a>
+               {% else %}
+                  <p>Cet utilisateur ne possède pas encore d'annonces</p>
+               {% endif %}
             {% endif %}
          </div>
       </div>

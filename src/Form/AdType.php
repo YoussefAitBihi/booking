@@ -54,9 +54,9 @@ class AdType extends AbstractType
                 'thumbnail',
                 FileType::class,
                 $this->setValuesOfAttributesFileForm(
-                    '1M',
+                    '2M',
                     ['image/jpeg'],
-                    "La taille de la miniature doit faire au maximum 1MO",
+                    "La taille de la miniature doit faire au maximum 2MO",
                     "Veuilez s'il vous plait insérer une miniature de type JPEG ou JPG"
                 )
             )

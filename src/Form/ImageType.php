@@ -21,9 +21,9 @@ class ImageType extends AbstractType
                 'image',
                 FileType::class,
                 $this->setValuesOfAttributesFileForm(
-                    '1M',
+                    '2M',
                     ['image/jpeg'],
-                    "L'image doit faire au maximum 1 MO",
+                    "L'image doit faire au maximum 2MO",
                     "Veuillez s'il vous plait insérer une image de type JPEG ou JPG"
                 )
             )

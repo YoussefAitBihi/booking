@@ -63,7 +63,7 @@ class AccountController extends AbstractController
 
             $newFilename = $uploader->upload(
                                         $avatar,
-                                        $this->getParameter('avatar_directory')
+                                        $this->getParameter('avatars_directory')
             );
 
             $user->setAvatar($newFilename);

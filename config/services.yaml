@@ -5,8 +5,8 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     thumbnails_directory: '%kernel.project_dir%/public/uploads/thumbnails'
-    slider_directory: '%kernel.project_dir%/public/uploads/sliders'
-    avatar_directory: '%kernel.project_dir%/public/uploads/avatars'
+    sliders_directory: '%kernel.project_dir%/public/uploads/sliders'
+    avatars_directory: '%kernel.project_dir%/public/uploads/avatars'
 
 services:
     # default configuration for services in *this* file
