@@ -11,6 +11,7 @@ use App\Form\AccountAvatarEditionType;
 use App\Form\AccountPasswordEditionType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\AccountDescriptionEditionType;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -231,10 +232,18 @@ class UserController extends AbstractController
      * @param User $user
      * @return Response
      */
-    public function profile(User $user): Response
+    public function profile(
+        User $user,
+        UserRepository $userRepository
+    ): Response
     {
+        // All counters
+        $counters  = $userRepository->getAllCounts($user->getId());
+
         return $this->render("user/profile.html.twig", [
-            'user' => $user
+            'user' => $user,
+            'commentsTotal' => $counters['commentsTotal'],               
+            'bookingsTotal' => $counters['bookingsTotal'],               
         ]);
     }
 }

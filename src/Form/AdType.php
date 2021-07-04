@@ -44,11 +44,11 @@ class AdType extends AbstractType
             )
             ->add(
                 'description',
-                CKEditorType::class,
-                $this->setValuesOfAttributesForm(
-                    "La description",
-                    "Une superbe description qui explique très bien votre logement"
-                )
+                CKEditorType::class, [
+                    'config' => [
+                        'editorplaceholder' => 'Taper une description intéressante pour avoir plus de la chance'
+                    ]
+                ]
             )
             ->add(
                 'thumbnail',
@@ -80,20 +80,18 @@ class AdType extends AbstractType
                 IntegerType::class,
                 $this->setValuesOfAttributesForm(
                     'Les chambres', 
-                    "Tapez le nombre de chambres de votre logement", [
-                        "min" => 1
-                    ]
+                    "Tapez le nombre de chambres de votre logement"
                 )
             )
             ->add(
                 'price',
-                MoneyType::class,
-                $this->setValuesOfAttributesForm(
-                    false,
-                    "Le prix de votre de logement", [
-                        'currency' => 'MAD'
+                MoneyType::class, [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'Le prix de votre de logement',
+                        'currency' => 826
                     ]
-                )
+                ]
             )
             ->add(
                 'images',

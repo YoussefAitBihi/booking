@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use DateTime;
 use DateTimeInterface;
+use App\Entity\Comment;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
@@ -74,7 +75,7 @@ class User implements UserInterface
     /**
      * @Assert\IdenticalTo(
      *  propertyPath="password",
-     *  message="Veuillez confimer correctement le mot de passe"
+     *  message="Veuillez confirmer correctement le mot de passe"
      * )
      */
     public $passwordConfirm;
@@ -112,6 +113,39 @@ class User implements UserInterface
      * @ORM\ManyToMany(targetEntity=Role::class, mappedBy="users")
      */
     private $userRoles;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="booker", orphanRemoval=true)
+     */
+    private $bookings;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="author", orphanRemoval=true)
+     */
+    private $comments;
+
+    /**
+     * Get Average rating
+     *
+     * @return integer|null
+     */
+    public function getAvgRating(): ?int
+    {
+        if (count($this->ads) > 0) {
+            foreach ($this->ads as $ad) {
+                $sumRating = array_reduce(
+                    $ad->getComments()->toArray(),
+                    fn($total, Comment $comment) => $total += $comment->getRating()
+                );
+    
+                if (count($ad->getComments()) > 0) {
+                    return ceil($sumRating / count($ad->getComments()));
+                }
+            }
+        }
+
+        return null;
+    }
 
     /**
      * Set automaticaly createdAt value
@@ -161,6 +195,8 @@ class User implements UserInterface
     {
         $this->ads = new ArrayCollection();
         $this->userRoles = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -353,6 +389,66 @@ class User implements UserInterface
     {
         if ($this->userRoles->removeElement($userRole)) {
             $userRole->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Booking[]
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): self
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings[] = $booking;
+            $booking->setBooker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): self
+    {
+        if ($this->bookings->removeElement($booking)) {
+            // set the owning side to null (unless already changed)
+            if ($booking->getBooker() === $this) {
+                $booking->setBooker(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getAuthor() === $this) {
+                $comment->setAuthor(null);
+            }
         }
 
         return $this;

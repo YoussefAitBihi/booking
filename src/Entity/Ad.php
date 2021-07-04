@@ -104,6 +104,59 @@ class Ad
     private $owner;
 
     /**
+     * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="ad", orphanRemoval=true)
+     */
+    private $bookings;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="ad", orphanRemoval=true)
+     */
+    private $comments;
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+    }
+
+    /**
+     * Retourner true si l'utilisateur à déjà fait un commentaire
+     *
+     * @param User $user
+     * @return Comment[]|bool $comment
+     */
+    public function isCommented(User $user)
+    {
+        foreach ($this->comments as $comment) {
+            if ($comment->getAuthor() === $user) {
+                return $comment;
+                break;
+            }       
+        }
+
+        return false;
+    }
+
+    /**
+     * Get Rating Ad
+     *
+     * @return integer|null
+     */
+    public function getAvgRating()
+    {
+        if (count($this->comments) > 0) {
+            $totalRating = array_reduce(
+                $this->comments->toArray(),
+                fn($total, Comment $comment) => $total += $comment->getRating()
+            );
+
+            return (int) ceil($totalRating / count($this->comments));
+        }
+
+    }
+
+    /**
      * Set automaticly publishedAt value when creating or updating an Ad
      *
      * @ORM\PrePersist
@@ -134,9 +187,33 @@ class Ad
         }
     }
 
-    public function __construct()
+    /**
+     * Permet de nous retourner Objet DateTime contenant toutes les dates qui sont déja réservées
+     *
+     * @return array représentant toutes les dates qui sont déjà occupées
+     */
+    public function getBusyDays(): array
     {
-        $this->images = new ArrayCollection();
+        $busyDays = [];
+  
+        foreach($this->bookings as $booking) {
+            // Toutes les dates qui sont déja réservées sous la forme de Timestamp
+            $timestampDate = range(
+                $booking->getStartDate()->getTimestamp(),
+                $booking->getEndDate()->getTimestamp(),
+                24 * 3600
+            );
+   
+            // Transformation le tableau $timestampDate en DateTime
+            $days = array_map(function($dayTimeStamp) {
+                return new \DateTime(date('Y-m-d', $dayTimeStamp));
+            }, $timestampDate);
+
+            // Fusionner deux tableaux
+            $busyDays = array_merge($busyDays, $days);
+        }
+  
+        return $busyDays;
     }
 
     public function getId(): ?int
@@ -290,6 +367,66 @@ class Ad
     public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Booking[]
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): self
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings[] = $booking;
+            $booking->setAd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): self
+    {
+        if ($this->bookings->removeElement($booking)) {
+            // set the owning side to null (unless already changed)
+            if ($booking->getAd() === $this) {
+                $booking->setAd(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setAd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getAd() === $this) {
+                $comment->setAd(null);
+            }
+        }
 
         return $this;
     }

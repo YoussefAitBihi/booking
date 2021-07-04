@@ -1,4 +1,7 @@
 {
+    "brokoskokoli/star-rating-bundle": {
+        "version": "v4.0.0"
+    },
     "cocur/slugify": {
         "version": "v4.0.0"
     },

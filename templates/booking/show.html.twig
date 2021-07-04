@@ -1,0 +1,170 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+   Réservation n°{{ booking.id }}
+{% endblock %}
+
+{% form_theme form _self %}
+
+{% block body %}
+
+{% set user          = app.user %}
+{% set isCommented   = booking.ad.isCommented(user) %}
+{% set owner         = booking.ad.owner %}
+{% set comment       = booking.ad.isCommented(user) %}
+
+{% if comment != false %}
+   {% set rating = comment.rating %}
+{% endif %}
+
+<div class="container mt-5">
+
+   <div class="row">
+      {# Booking infos #}
+      <div class="col-md-7 col-sm-12">
+         <section class="booking-infos">
+            <h3>Plus de détails sur votre réservation</h3>
+            <hr class="my-4">
+            <div class="booking-infos__details">
+               <ul class="list-unstyled">
+                  <li class="mb-2">Réservation n°<strong>{{ booking.id }}</strong></li>
+                  <li class="mb-2">Le titre de l'annonce : <strong>{{ booking.ad.title }}</strong></li>
+                  <li class="mb-2">la date d'arrivée : <strong>{{ booking.startDate|date('D, d M Y') }}</strong></li>
+                  <li class="mb-2">La date de départ <strong>{{ booking.endDate|date('D, d M Y') }}</strong></li>
+                  <li class="mb-2">Le nombre de jours d'hébergement : <strong>{{ booking.duration }} jours</strong></li>
+                  <li>Le montant est : <strong>{{ booking.amount }} DH</strong></li>
+               </ul>
+            </div>
+         </section>
+      </div>
+      <div class="col-md-1">
+         <div class="vertical-separator"></div>
+      </div>
+      {# Booking owner #}
+      <div class="col-md-4 col-sm-12">
+         <section class="booking-owner">
+            <h3>Infos sur l'hôte</h3>
+            <hr class="my-3">
+            <div class="row">
+               <div class="col-4">
+                  <div class="booking-owner__avatar text-center">
+                     <small>
+                        <strong class="mb-3">{{ owner.fullname }}</strong>
+                     </small>
+                     <img 
+                        src="/uploads/avatars/{{ owner.avatar }}" 
+                        alt="Photo de profil de {{ owner.fullname }}" 
+                        class="rounded-circle w-100">
+                  </div>
+               </div>
+               <div class="col d-flex align-items-center">
+                  <ul class="list-unstyled m-0">
+                     <li class="mb-2"><i class="fas fa-at text-muted mr-3"></i> {{ owner.email }}</li>
+                     <li class="mb-2"><i class="fas fa-map-marker-alt text-muted mr-3"></i>Jamila 5 rue 70 n°412</li>
+                     <li><i class="fas fa-phone text-muted mr-3"></i>0634102365</li>
+                  </ul>
+               </div>
+            </div>
+         </section>
+      </div>
+   </div>
+
+   {# Separator #}
+   <div class="row">
+      <div class="col-md-7 col-sm-12">
+         <hr class="my-5">
+      </div>
+   </div>
+
+   <!-- Comment section -->
+   <div class="row">
+      <div class="col-md-7 col-sm-12">
+         <section class="booking-comment">
+            <div class="booking-comment__heading mb-5">
+               <h3 class="mb-2">Commentaire public</h3>
+               {% if isCommented == false %}
+                  <p>
+                     Vous pouvez dès maintenant mettre en place un superbe commentaire, et n'hésitez pas de mettre également en place une superbe note <strong>(5 étoiles si ça vous a plu)</strong>
+                  </p>
+               {% else %}
+                  <p>
+                     Vous pouvez dès maintenant modifier votre commentaire
+                  </p>
+                  <div class="booking-comment__content">
+                     <div class="row">
+                        <div class="col-lg-8">
+                           <div class="row">
+                              <div class="col-md-2">
+                                 <div class="booking-comment__content-avatar">
+                                    <img 
+                                       src="/uploads/avatars/{{ user.avatar }}"
+                                       class="rounded-circle img-fluid"
+                                       alt="Photo de profil de {{ user.fullname }}"
+                                    >
+                                 </div>
+                              </div>
+                              <div class="col">
+                                 <div class="booking-comment__content-details">
+                                    <h6>{{ user.fullname }}</h6>
+                                    <span class="booking-comment__content-details-rating text-warning">
+                                       {{ include('/partials/rating.html.twig') }}
+                                    </span>
+                                    <small class="booking-comment__content-details-created-at text-muted">
+                                       {{ comment.createdAt|date('D, d M Y') }}
+                                    </small>
+                                    <blockquote><em>{{ comment.content|raw }}</em></blockquote>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+               {% endif %}
+            </div>
+            {% if isCommented == false %}
+            <div class="booking-comment__form">
+               {{ form_start(form) }}
+                  <!-- Description field -->
+                  <div class="form-outline">
+                     {{ form_widget(form.content) }}
+                     <small class="form-help">{{ form_help(form.content) }}</small>
+                     {% if form_errors(form.content) is not empty %}
+                        <div class="form-error mt-3">
+                           {{ form_errors(form.content) }}
+                        </div>
+                     {% endif %}
+                  </div>
+                  <small 
+                     class="text-muted mb-4 d-inline-block {% if form_errors(form.content) is not empty %}invisible{% endif %}">Entre <strong>10</strong> et <strong>200</strong> caractères
+                  </small>
+
+                  <!-- Rating field -->
+                  <div class="form-outline">
+                     {{ form_widget(form.rating) }}
+                     <small class="form-help">{{ form_help(form.rating) }}</small>
+                     {% if form_errors(form.rating) is not empty %}
+                        <div class="form-error mt-3">
+                           {{ form_errors(form.rating) }}
+                        </div>
+                     {% endif %}
+                  </div>
+                  <small 
+                     class="text-muted mb-4 d-inline-block {% if form_errors(form.rating) is not empty %}invisible{% endif %}">Entre <strong>1</strong> et <strong>5</strong> étoiles
+                  </small>
+
+                  <!-- Submit button -->
+                  <div class="form-outline">
+                     <button class="btn btn-primary">
+                        <i class="fas fa-plus mr-2"></i>
+                        Nouveau commentaire
+                     </button>
+                  </div>
+               {{ form_end(form) }}
+            </div>
+            {% endif %}
+         </section>
+      </div>
+   </div>
+</div>
+{% endblock %}

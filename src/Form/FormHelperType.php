@@ -25,21 +25,25 @@ trait FormHelperType
     /**
      * Set values of the attributes of the form
      *
-     * @param string $label
+     * @param $label
      * @param string $placeholder
      * @return array
      */
     public function setValuesOfAttributesForm(
-        string $label, 
+        $label, 
         string $placeholder,
+        array $attrOptions = [],
         array $options = []
     ): array
     {
+
+        $placeholderAttr = ['placeholder' => $placeholder];
+
+        $attr = array_merge($placeholderAttr, $attrOptions);
+
         return [
-            'label'     => $label,
-            'attr'      => array_merge([
-                'placeholder' => $placeholder
-            ], $options)
+            'label' => $label, 
+            'attr' => $attr
         ];
 
     }

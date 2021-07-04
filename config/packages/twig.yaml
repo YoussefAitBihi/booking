@@ -3,6 +3,8 @@ twig:
         '@FOSCKEditor/Form/ckeditor_widget.html.twig'
     ]
     default_path: '%kernel.project_dir%/templates'
+    paths:
+        '%kernel.project_dir%/vendor/brokoskokoli/star-rating-bundle/Resources/views': BrokoskokoliStarRatingBundle
 
 fos_ck_editor:
     configs:

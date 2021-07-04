@@ -6,7 +6,9 @@ use App\Entity\Ad;
 use Faker\Factory;
 use App\Entity\Role;
 use App\Entity\User;
+use App\Entity\Comment;
 use App\Entity\Image;
+use App\Entity\Booking;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -27,6 +29,9 @@ class AppFixtures extends Fixture
         define("P_D", dirname(dirname(__DIR__)));
 
         $faker = Factory::create('fr-Fr');
+
+        $ads = array();
+        $users = array();
 
         // Delete all thumbnails when I want to create new adverts
         $dir_thumbnails = P_D . "/public/uploads/thumbnails";
@@ -122,6 +127,8 @@ class AppFixtures extends Fixture
 
             $manager->persist($user);
 
+            array_push($users, $user);
+
             // Fake Ads
             for ($j = 0; $j < mt_rand(2, 5); $j++) {
 
@@ -163,6 +170,8 @@ class AppFixtures extends Fixture
 
                 $manager->persist($ad);
 
+                array_push($ads, $ad);
+
                 // Fake Sliders
                 for ($k = 0; $k < mt_rand(3, 5); $k++) {
 
@@ -178,7 +187,43 @@ class AppFixtures extends Fixture
                         ->setCaption($faker->sentence());
 
                     $manager->persist($image);
+                } // end fake sliders
+
+                // Fake booking
+                for ($b = 0; $b < 5; $b++) {
+                    $book = new Booking();
+                    
+                    $startDate = $faker->dateTimeBetween('-2 months');
+                    $duration = mt_rand(3, 10);
+                    $endDate = (clone $startDate)->modify("+$duration days");
+                    
+                    $book
+                        ->setBooker($user)
+                        ->setAd($ad)
+                        ->setStartDate($startDate)
+                        ->setEndDate($endDate)
+                        ->setAmount($duration * $ad->getPrice());
+
+                    $manager->persist($book);
                 }
+            } // End fake ads
+            
+        
+        } // End fake users
+
+        // Fake comments
+        for ($a = 0; $a < count($ads) - 1; $a++) {
+            for ($c = 0; $c < count($users) - 1; $c++) {
+                
+                $comment = new Comment();
+
+                $comment
+                    ->setAuthor($users[$c])
+                    ->setAd($ads[$a])
+                    ->setContent($faker->paragraph(mt_rand(3, 5)))
+                    ->setRating(mt_rand(1, 5));
+
+                $manager->persist($comment);
             }
         }
 

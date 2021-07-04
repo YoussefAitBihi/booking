@@ -4,6 +4,10 @@
 
 {% block body %}
 
+{% set ratingAd   = ad.avgRating %}
+{% set owner      = ad.owner %}
+{% set ratingUser = owner.avgRating %}
+
 {# Ad show header #}
 <header 
    class="ad-show__header text-white py-5"
@@ -11,58 +15,59 @@
 >
    <div class="overlay d-flex align-items-center">
       <div class="container">
-         {% if app.user and app.user == ad.owner %}
-            <!-- Action -->
-            <div class="dropdown ad-show__action action-button">
-               <a
-                  class="btn btn-primary dropdown-toggle"
-                  href="#"
-                  role="button"
-                  id="dropdownMenuLink"
-                  data-mdb-toggle="dropdown"
-                  aria-expanded="false"
-               >
-               Action
-               </a>
-            
-               <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                  <li>
-                     <a 
-                        class="dropdown-item" 
-                        href="{{ path('ad_edit', {'id': ad.id, 'slug': ad.slug}) }}">
-                        <i class="fas fa-pen mr-2"></i>
-                        Modifier l'annonce
-                     </a>
-                  </li>
-                  <li>
-                     <a 
-                        class="dropdown-item" 
-                        href="{{ path('ad_delete', {'id': ad.id, 'slug': ad.slug}) }}"
-                        onclick="return confirm('Voulez-vous vraiment supprimer cette annonce `{{ ad.title }}`?')">
-                        <i class="fas fa-trash mr-2"></i>
-                        Supprimer l'annonce
-                     </a>
-                  </li>
-               </ul>
-            </div>
-         {% endif %}
+      {% if app.user and app.user == owner %}
+         <!-- Action -->
+         <div class="dropdown ad-show__action action-button">
+            <a
+               class="btn btn-primary dropdown-toggle"
+               href="#"
+               role="button"
+               id="dropdownMenuLink"
+               data-mdb-toggle="dropdown"
+               aria-expanded="false"
+            >
+            Action
+            </a>
+         
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+               <li>
+                  <a 
+                     class="dropdown-item" 
+                     href="{{ path('ad_edit', {'id': ad.id, 'slug': ad.slug}) }}">
+                     <i class="fas fa-pen mr-2"></i>
+                     Modifier l'annonce
+                  </a>
+               </li>
+               <li>
+                  <a 
+                     class="dropdown-item" 
+                     href="{{ path('ad_delete', {'id': ad.id, 'slug': ad.slug}) }}"
+                     onclick="return confirm('Voulez-vous vraiment supprimer cette annonce `{{ ad.title }}`?')">
+                     <i class="fas fa-trash mr-2"></i>
+                     Supprimer l'annonce
+                  </a>
+               </li>
+            </ul>
+         </div>
+      {% endif %}
          <h1>{{ ad.title }}</h1>
          <p>{{ ad.introduction }}</p>
          <div class="ad-show__rating">
             <small class="text-warning">
-               <strong>4.6</strong>
-               {% for i in 0..4 %}
-                  <i class="fas fa-star"></i>
-               {% endfor %}
+               <strong>{{ ratingAd|number_format(1, ',') }}</strong>
+               {{ include('/partials/rating.html.twig', {'rating': ratingAd}) }}
             </small>
-            <small>(<strong>100</strong> notes) <strong>100.000</strong> voyageurs</small><br>
+            <small>
+               (<strong>{{ ad.comments|length }}</strong> notes) 
+               <strong>{{ ad.bookings|length }}</strong> voyageurs
+            </small><br>
          </div>
          <div class="ad-show__owner">
             Le propriétaire 
             <a 
                href="{{ path('ad_show', {'id': ad.id, 'slug': ad.slug}) }}#ad-show__owner-id" class="text-decoration-underline"
             >
-               {{ ad.owner.fullname }}
+               {{ owner.fullname }}
             </a>
          </div>
          <div class="ad-show__created-at">
@@ -98,7 +103,7 @@
                      <img
                         src="/uploads/sliders/{{ image.image }}"
                         class="d-block w-100 img-fluid"
-                        alt="..."
+                        alt="{{ image.caption }}"
                      />
                      <div class="carousel-caption d-none d-md-block">
                         <h5>{{ ad.title }}</h5>
@@ -140,10 +145,13 @@
                >
                <div class="card-body">
                   <div class="card-title my-3">
-                     <strong class="display-6">${{ ad.price }}</strong> / nuit, 
+                     <strong class="display-6">{{ ad.price }} DH</strong> / nuit, 
                      <strong>{{ ad.rooms }}</strong> chambres à <strong>{{ ad.city }}</strong>
                   </div>
-                  <a href="#!" class="btn btn-primary d-block">Réserver dès maintenant</a>
+                  <a href="{{ path('booking_book', {'id': ad.id, 'slug': ad.slug}) }}" class="btn btn-primary d-block">
+                     <i class="fas fa-book mr-2"></i>
+                     Réserver dès maintenant
+                  </a>
                </div>
             </div>
          </section>
@@ -175,14 +183,15 @@
                         <div class="col-lg-4 text-center">
                            <h6 class="ad-show__owner-name">
                               <a 
-                                 href="{{ path('account_profile', {'slug': ad.owner.slug}) }}">{{ ad.owner.fullname }}
+                                 href="{{ path('account_profile', {'slug': owner.slug}) }}">{{ owner.fullname }}
                               </a>
                            </h6>
                            <div class="ad-show__owner-avatar">
-                              <a href="{{ path('account_profile', {'slug': ad.owner.slug}) }}">
+                              <a href="{{ path('account_profile', {'slug': owner.slug}) }}">
                                  <img 
-                                    src="/uploads/avatars/{{ ad.owner.avatar }}" class="img-fluid rounded-circle" 
-                                    alt="Avatar de {{ ad.owner.fullname }}"
+                                    src="/uploads/avatars/{{ owner.avatar }}" 
+                                    class="img-fluid rounded-circle" 
+                                    alt="Avatar de {{ owner.fullname }}"
                                  >
                               </a>
                            </div>
@@ -192,35 +201,53 @@
                               <li>
                                  <small>
                                     <i class="fas fa-star me-3 text-warning"></i>
-                                    <strong>4.6</strong> 
+                                    <strong>
+                                    {% if owner.avgRating > 0 %}
+                                       {{ owner.avgRating }}
+                                    {% else %}
+                                       --
+                                    {% endif %}
+                                    </strong> 
                                     Note
-                                 </small>
-                              </li>
-                              <li>
-                                 <small>
-                                    <i class="fas fa-user me-3 text-warning"></i>
-                                    <strong>20</strong> 
-                                    Voyageurs
-                                 </small>
-                              </li>
-                              <li>
-                                 <small>
-                                    <i class="fas fa-comment me-3 text-warning"></i>
-                                    <strong>15</strong> 
-                                    Commentaires
                                  </small>
                               </li>
                               <li>
                                  <small>
                                     <i class="fas fa-house-user me-3 text-warning"></i>
                                     <strong>
-                                    {% if ad.owner.ads|length > 0 %}
-                                       {{ ad.owner.ads|length }}
+                                    {% if owner.ads|length > 0 %}
+                                       {{ owner.ads|length }}
                                     {% else %}
                                        --
                                     {% endif %}
                                     </strong> 
                                     Logements
+                                 </small>
+                              </li>
+                              <li>
+                                 <small>
+                                    <i class="fas fa-user me-3 text-warning"></i>
+                                    <strong>
+                                    {% if bookingsTotal > 0 %}
+                                       {{ bookingsTotal }}
+                                    {% else %}
+                                       --
+                                    {% endif %}
+                                    </strong> 
+                                    Voyageurs
+                                 </small>
+                              </li>
+                              <li>
+                                 <small>
+                                    <i class="fas fa-comment me-3 text-warning"></i>
+                                    <strong>
+                                    {% if commentsTotal > 0 %}
+                                       {{ commentsTotal }}
+                                    {% else %}
+                                       --
+                                    {% endif %}
+                                    </strong> 
+                                    Commentaires
                                  </small>
                               </li>
                            </ul>
@@ -231,7 +258,7 @@
                <div class="row mt-2">
                   <div class="col">
                      <div class="ad-show__owner-descritption">
-                        <p>{{ ad.owner.description }}</p>
+                        <p>{{ owner.description }}</p>
                      </div>
                   </div>
                </div>    
@@ -243,11 +270,11 @@
    {# Top ads #}
    <div class="row my-3">
       <div class="col-lg-8 col-sm-12">
-         <h4 class="mb-3">Les voyageurs ont loué aussi</h4>
+         <h4 class="mb-3">Les voyageurs ont également réservé</h4>
          <div class="row">
-            {% for i in 0..1 %}
+            {% for ad in topAds %}
             <div class="col-lg-6">
-               {% include "cards/ad_card.html.twig" %}
+               {{ include("cards/ad_card.html.twig", {'ad': ad.ad, 'rating': ad.rating}) }}
             </div>
             {% endfor %}
          </div>
@@ -262,39 +289,43 @@
 <div class="container">
    <section class="ad-show__comment">
       <h4 class="mb-3">Feedback des voyageurs</h4>
-      {% for i in 0..10 %}    
-      <div class="row">
-         <div class="col-lg-8">
-            <div class="row">
-               <div class="col-lg-2">
-                  <div class="ad-show__comment-avatar">
-                     <img 
-                        src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" 
-                        class="rounded-circle img-fluid"
-                        alt=""
-                     >
+      {% if ad.comments|length > 0 %}
+         {% for comment in ad.comments %}    
+         <div class="row">
+            <div class="col-lg-8">
+               <div class="row">
+                  <div class="col-lg-2">
+                     <div class="ad-show__comment-avatar">
+                        <img 
+                           src="/uploads/avatars/{{ comment.author.avatar }}"
+                           class="rounded-circle img-fluid"
+                           alt="Photo de profil de {{ comment.author.fullname }}"
+                        >
+                     </div>
+                  </div>
+                  <div class="col">
+                     <div class="ad-show__comment-details">
+                        <h6>{{ comment.author.fullname }}</h6>
+                        <span class="ad-show__comment-rating text-warning">
+                           {{ include('/partials/rating.html.twig', {'rating': comment.rating}) }}
+                        </span>
+                        <small class="ad-show__comment-published-at text-muted">
+                           {{ comment.createdAt|date('D, d M Y') }}
+                        </small>
+                        <blockquote>
+                           <em>{{ comment.content|raw }}</em>
+                        </blockquote>
+                     </div>
                   </div>
                </div>
-               <div class="col">
-                  <div class="ad-show__comment-details">
-                     <h6>Jhon doe</h6>
-                     <span class="ad-show__comment-rating text-warning">
-                        {% for i in 0..4 %}
-                           <i class="fas fa-star"></i>
-                        {% endfor %}
-                     </span>&nbsp;
-                     <small class="ad-show__comment-published-at text-muted">
-                        ça fait 3 jours
-                     </small>
-                     <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus, repudiandae?</p>
-                  </div>
-               </div>
+               {# Separator #}   
+               <hr class="my-3 {% if loop.last %}d-none{% endif %}">
             </div>
-            {# Separator #}   
-            <hr class="my-3 {% if loop.last %}d-none{% endif %}">
          </div>
-      </div>
-      {% endfor %}
+         {% endfor %}
+      {% else %}
+      <p>Il n'y a aucun commentaire pour le moment.</p>
+      {% endif %}
    </section>
 </div>
 {% endblock %}

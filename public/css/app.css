@@ -51,6 +51,13 @@ i.fas {
    height: 100% !important;
 }
 
+.datepicker table tr td.disabled, .datepicker table tr td.disabled:hover {
+   color: #E74C3C !important;
+   background-color: #e6e4e4 !important;
+   border: none !important;
+   border-radius: 50%;
+}
+
 /* Ad Card */
 .card .card-body__details ul {
    display: flex;
@@ -101,4 +108,10 @@ i.fas {
 .ad-show__comment .ad-show__comment-avatar {
    width: 60px !important;
    height: 60px !important;
+}
+
+.booking-book__form {
+   padding: 20px;
+   background-color: #fff;
+   box-shadow: 2px 2px 10px rgb(0 0 0 / 20%);
 }

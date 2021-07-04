@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+   Réservation de {{ ad.title }}
+{% endblock %}
+
+{% form_theme form _self %}
+
+{% block stylesheets %}
+   <link 
+      rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" />
+{% endblock %}
+
+{% block body %}
+<div class="booking-book vh-100"
+   style="background: url(/uploads/thumbnails/{{ ad.thumbnail }}); background-size: cover"
+>
+   <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+         <div class="col-md-8 col-sm-12">
+            <div class="booking-book__form">
+               {{ form_start(form) }}
+                  <div class="row mb-3">
+                     {# Date d'arrivée #}
+                     <div class="col">
+                        <div class="form-outline">
+                           {{ form_widget(form.startDate) }}
+                           {{ form_label(form.startDate, null, {
+                              'label_attr': {
+                                 'class': 'form-label'
+                              }
+                           }) }}
+                           <small class="form-help">{{ form_help(form.startDate) }}</small>
+                           {% if form_errors(form.startDate) is not empty %}
+                              <div class="form-error mt-3">
+                                 {{ form_errors(form.startDate) }}
+                              </div>
+                           {% endif %}
+                        </div>
+                        <small class="text-muted {% if form_errors(form.startDate) is not empty %}invisible{% endif %}"><strong>Date valide</strong></small>
+                     </div>
+                     {# Date de départ #}
+                     <div class="col">
+                        <div class="form-outline">
+                           {{ form_widget(form.endDate) }}
+                           {{ form_label(form.endDate, null, {
+                              'label_attr': {
+                                 'class': 'form-label'
+                              }
+                           }) }}
+                           <small class="form-help">{{ form_help(form.endDate) }}</small>
+                           {% if form_errors(form.endDate) is not empty %}  
+                              <div class="form-error mt-3">
+                                 {{ form_errors(form.endDate) }}
+                              </div>
+                           {% endif %}
+                        </div>
+                        <small 
+                           class="text-muted {% if form_errors(form.endDate) is not empty %}invisible{% endif %}"
+                        >
+                           <strong>Date valide</strong>
+                        </small>
+                     </div>
+                  </div>
+
+                  {# Amount and days #}
+                  <div class="booking-book__amount mb-4 d-none"></div>
+
+                  {# Submit button #}
+                  <button class="btn btn-primary">
+                     <i class="fas fa-book mr-2"></i>
+                     Réserver
+                  </button>
+               {{ form_end(form) }}
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+   <script 
+      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js">
+   </script>
+   <script>
+      $(function() {
+         
+         $('#booking_startDate, #booking_endDate').datepicker({
+            format: 'dd/mm/yyyy',
+            datesDisabled: [
+               {% for day in ad.busyDays %}
+                  "{{ day.format('d/m/Y') }}",
+               {% endfor %}
+            ],
+            startDate: new Date()
+         });
+
+         $('#booking_startDate, #booking_endDate').on('change', function() {
+            let startDate = new Date($('#booking_startDate').val().replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
+            let endDate = new Date($('#booking_endDate').val().replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
+
+            const HOUR_TO_MS = 24 * 3600 * 1000;
+
+            if (startDate && endDate && endDate > startDate) {
+               let days = (endDate - startDate) / HOUR_TO_MS;
+
+               let amount = days * {{ ad.price }};
+
+               if (days === 1) {
+                  $('.booking-book__amount')
+                  .removeClass('d-none')
+                  .text("Vous avez réservé un jour pour " + amount + ' DH')
+               } else {
+                  $('.booking-book__amount')
+                     .removeClass('d-none')
+                     .text("Vous avez réservé " + days + " jours pour " + amount + ' DH')
+               }
+
+            } else {
+               $('.booking-book__amount').addClass('d-none')
+            }
+         });
+      });
+   </script>
+{% endblock %}

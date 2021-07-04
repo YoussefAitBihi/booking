@@ -6,6 +6,7 @@ use App\Entity\Ad;
 use App\Form\AdType;
 use App\Service\Uploader;
 use App\Repository\AdRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -106,12 +107,29 @@ class AdController extends AbstractController
      * @Route("/ad/{id}-{slug}", name="ad_show", methods={"GET"})
      * 
      * @param Ad $ad
+     * @param AdRepository $adRepository
+     * @param UserRepository $userRepository
      * @return Response
      */
-    public function show(Ad $ad): Response
-    {        
+    public function show(
+        Ad $ad,
+        AdRepository $adRepository,
+        UserRepository $userRepository
+    ): Response
+    {  
+        // Ad rating
+        $ratingAd = $adRepository->getRating($ad->getId());
+        // All counters
+        $counters = $userRepository->getAllCounts($ad->getOwner()->getId());
+        // Top Ads
+        $topAds = $adRepository->getTopAdsUser($ad->getOwner()->getId(), 2);
+
         return $this->render('ad/show.html.twig', [
-            'ad' => $ad
+            'ad'         => $ad,
+            'ratingAd'   => $ratingAd,
+            'commentsTotal' => $counters['commentsTotal'],
+            'bookingsTotal' => $counters['bookingsTotal'],
+            'topAds'         => $topAds
         ]);
     }
 
@@ -273,7 +291,8 @@ class AdController extends AbstractController
         $ads = $repo->findAll();
     
         return $this->render('ad/index.html.twig', [
-            'ads' => $ads
+            'ads' => $ads,
+            'repo' => $repo
         ]);
     }
 

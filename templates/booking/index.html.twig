@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Toutes les réservations" %}
+
+{% block body %}
+<div class="container mt-5">
+   <div class="booking-all__header text-center mb-5">
+      <h1 class="display-6">Vos réservations</h1>
+      <p>Vos réservations sont invisibles pour les autres</p>  
+   </div>
+
+   {% if bookings %}
+   <div class="row">
+      {% for booking in bookings %}
+      <div class="col-xl-3 col-md-6 col-sm-12 mb-4">
+         {% set url = path("booking_show", {"id": booking.id}) %}
+         <div class="card hover-shadow">
+            <div 
+               class="bg-image hover-overlay ripple"
+               data-mdb-ripple-color="light"
+               >
+               <img
+                  src="/uploads/thumbnails/{{ booking.ad.thumbnail }}"
+                  class="img-fluid"
+                  alt="Img fluid"
+               />
+               <a href="{{ url }}">
+                  <div class="mask" style="background-color: rgba(251, 251, 251, 0.15)"></div>
+               </a>
+            </div>
+            <div class="card-body">
+               <h5 class="card-title text-truncate" title="{{ booking.ad.title }}">{{ booking.ad.title }}</h5>
+               <p class="card-text overflow-hidden" style="max-height: 47px" title="{{ booking.ad.title }}"><small>{{ booking.ad.introduction }}</small></p>
+               <div class="card-body__details">
+                  <ul class="list-unstyled text-muted">
+                     <li>
+                        <small>
+                           <i class="fas fa-calendar me-2"></i>{{ booking.startDate|date('j F Y') }}
+                        </small>
+                     </li>
+                     <li>
+                        <small>
+                           <i class="fas fa-calendar me-2"></i>{{ booking.endDate|date('j F Y') }}
+                        </small>
+                     </li>
+                     <li>
+                        <small>
+                           <i class="fas fa-money-check-alt me-2"></i>{{ booking.amount }} DH
+                        </small>
+                     </li>
+                     <li>
+                        <small>
+                           <i class="fas fa-calendar-day me-2"></i>{{ booking.duration }} jours
+                        </small>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
+      {% endfor %}
+   </div>
+   {% endif %}
+</div>
+{% endblock %}

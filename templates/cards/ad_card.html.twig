@@ -1,4 +1,5 @@
 {% set url = path("ad_show", {"id": ad.id, "slug": ad.slug}) %}
+{% set rating = ad.avgRating %}
 
 <div class="card hover-shadow">
    <div 
@@ -31,7 +32,7 @@
             </li>
             <li>
                <small>
-                  <i class="fas fa-dollar-sign me-2"></i>{{ ad.price }}
+                  <i class="fas fa-money-bill-alt me-2"></i>{{ ad.price }} DH
                </small>
             </li>
             <li>
@@ -45,11 +46,8 @@
    <div class="card-footer bg-light d-flex justify-content-between align-items-center">
       <div>
          <small class="text-warning">
-            <strong>4.6</strong>
-            {% for i in 0..4 %}
-               <i class="fas fa-star"></i>
-            {% endfor %}
-            <strong class="text-muted">(100)</strong>
+            {{ include('/partials/rating.html.twig') }}
+            <strong class="text-muted">({{ ad.comments|length }})</strong>
          </small>
       </div>
       <small class="{% if app.user and app.user == ad.owner %}d-none{% endif %}"><a href="{{ url }}">Voir plus</a></small>
