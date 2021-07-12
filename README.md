@@ -9,11 +9,11 @@
   <h3 style="margin-bottom: 10px">Installation</h3>
   <ol>
     <li>Clonez le dépôt chez vous</li>
-    <li>Taper la commande suivante <b><em>php bin/console doctrine:database:create</em></b> afin que vous puissiez créer la base de données</li>
-    <li>Taper la commande suivante <b><em>php bin/console make:migration</em></b> afin que vous puissiez créer la migration</li>
-    <li>Taper la commande suivante <b><em>php bin/console doctrine:migrations:migrate</em></b> afin que vous puissiez créer toutes les tables</li>
-    <li>Taper la commande suivante <b><em>php bin/console doctrine:fixtures:load --no-interaction</em></b> pour avoir des fausses données</li>
-    <li>Lancer le serveur interne de php en tapant <em>php -S localhost:8000 -t public</em></bold></li>
+    <li>Taper la commande suivante <code>php bin/console doctrine:database:create</code> afin que vous puissiez créer la base de données</li>
+    <li>Taper la commande suivante <code>php bin/console make:migration</code> afin que vous puissiez créer la migration</li>
+    <li>Taper la commande suivante <code>php bin/console doctrine:migrations:migrate</code> afin que vous puissiez créer toutes les tables</li>
+    <li>Taper la commande suivante <code>php bin/console doctrine:fixtures:load --no-interaction</code> pour avoir des fausses données</li>
+    <li>Lancer le serveur interne de php en tapant <code>php -S localhost:8000 -t public</code></li>
     <li>Profitez-en</li>
   </ol>
 </main>
