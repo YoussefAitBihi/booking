@@ -1,0 +1,41 @@
+<!-- The user's slug -->
+{% if user is defined %}
+   {% set slug = {'slug': user.slug} %}
+{% else %}
+   {% set slug = {} %}
+{% endif %}
+<!-- Current Path -->
+{% set previousPage  = path(route, {'page': paginator.currentPage - 1}|merge(slug)) %}
+{% set nextPage      = path(route, {'page': paginator.currentPage + 1}|merge(slug)) %}
+
+<div class="d-flex justify-content-center">
+   <nav aria-label="Page navigation example">
+      <ul class="pagination">
+         <li class="page-item {% if paginator.currentPage == 1 %}disabled{% endif %}">
+            <a 
+               class="page-link" 
+               href="{{ previousPage }}" 
+               tabindex="-1" 
+               aria-disabled="true">
+               &laquo;
+            </a>
+         </li>
+         {% for i in 1..paginator.calculatePages %}
+            <li 
+               class="page-item {% if paginator.currentPage == i %}active{% endif %}" 
+               aria-current="page">
+               <a class="page-link" href="{{ path(route, {'page': i}|merge(slug)) }}">{{i}} 
+                  <span class="visually-hidden">(current)</span>
+               </a>
+            </li>
+         {% endfor %}
+         <li class="page-item {% if paginator.currentPage == paginator.calculatePages %}disabled{% endif %}">
+            <a 
+               class="page-link" 
+               href="{{ nextPage }}">
+               &raquo;
+            </a>
+         </li>
+      </ul>
+   </nav>
+</div>

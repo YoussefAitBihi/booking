@@ -2,16 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\Ad;
 use App\Entity\User;
 use App\Service\Uploader;
+use App\Service\Paginator;
 use App\Entity\PasswordUpdate;
+use App\Repository\AdRepository;
+use App\Repository\UserRepository;
 use App\Form\AccountInfosEditionType;
 use Symfony\Component\Form\FormError;
 use App\Form\AccountAvatarEditionType;
 use App\Form\AccountPasswordEditionType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\AccountDescriptionEditionType;
-use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -227,23 +230,33 @@ class UserController extends AbstractController
     /**
      * Allow to show the user's profile
      * 
-     * @Route("/user/{slug}", name="account_profile")
+     * @Route("/user/{slug}/{page<\d+>?1}", name="account_profile")
      * 
      * @param User $user
+     * @param UserRepository $userRepository
      * @return Response
      */
     public function profile(
         User $user,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        int $page,
+        Paginator $paginator
     ): Response
     {
+        $paginator
+            ->setEntityClassName(Ad::class)
+            ->setOwner($user)
+            ->setLimit(2)
+            ->setCurrentPage($page);
+
         // All counters
         $counters  = $userRepository->getAllCounts($user->getId());
 
         return $this->render("user/profile.html.twig", [
             'user' => $user,
+            'paginator' => $paginator,
             'commentsTotal' => $counters['commentsTotal'],               
-            'bookingsTotal' => $counters['bookingsTotal'],               
+            'bookingsTotal' => $counters['bookingsTotal'],
         ]);
     }
 }

@@ -121,7 +121,7 @@ class Ad
     }
 
     /**
-     * Retourner true si l'utilisateur à déjà fait un commentaire
+     * Retourner le commentaire si le voyageur est déjà commenter l'annonce
      *
      * @param User $user
      * @return Comment[]|bool $comment

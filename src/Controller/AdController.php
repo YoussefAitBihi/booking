@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Ad;
 use App\Form\AdType;
 use App\Service\Uploader;
+use App\Service\Paginator;
 use App\Repository\AdRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -280,18 +281,26 @@ class AdController extends AbstractController
     /**
      * Show all ads
      * 
-     * @Route("/ads", name="ads_index", methods={"GET"})
+     * @Route("/ads/{page<\d+>?1}", name="ads_index", methods={"GET"})
      *
      * @param AdRepository $repo 
+     * @param int $page
+     * @param Paginator $paginator
      * @return Response
      */
-    public function index(AdRepository $repo): Response
+    public function index(
+        AdRepository $repo,
+        int $page,
+        Paginator $paginator
+    ): Response
     {   
-        /** @var Ad[] $ads contains all ads */
-        $ads = $repo->findAll();
+        
+        $paginator
+            ->setEntityClassName(Ad::class)
+            ->setCurrentPage($page);
     
         return $this->render('ad/index.html.twig', [
-            'ads' => $ads,
+            'paginator' => $paginator,
             'repo' => $repo
         ]);
     }

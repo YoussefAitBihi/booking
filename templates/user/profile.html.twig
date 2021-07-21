@@ -79,6 +79,8 @@
          </div>
       </div>
    </div>
+   
+   {# User's ads #}
    <div class="row justify-content-end">
       <div class="col-md-8">
          <hr class="my-5">
@@ -86,7 +88,7 @@
             {% if user.ads|length > 0 %}
             <div class="row">
                <h6 class="mb-2">Mes annonces ({{ user.ads|length }})</h6>
-               {% for ad in user.ads %}
+               {% for ad in paginator.fetchItems %}
                <div class="col-md-6 mb-3">
                   {{ include('cards/ad_card.html.twig') }}
                </div>
@@ -94,7 +96,9 @@
             </div>
             {% else %}
                {% if app.user == user %}
-                  <p>Vous n'avez pas encore d'annonces à afficher. vous pouvez dès maintenant créer une annonce</p>
+                  <p>
+                     Vous n'avez pas encore d'annonces à afficher. vous pouvez dès maintenant créer une annonce
+                  </p>
                   <a 
                      href="{{ path('ad_create') }}"
                      class="btn btn-primary">
@@ -108,5 +112,10 @@
          </div>
       </div>
    </div>
+
+   <!-- Pagination -->
+   {% if paginator.calculatePages > 1 %}
+      {{ paginator.render() }}
+   {% endif %}
 </div>
 {% endblock %}

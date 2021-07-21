@@ -84,7 +84,7 @@
       <!-- Ad Carousel -->
       <div class="col-lg-8 col-md-12">
          <section class="ad-show__slider">
-            <div id="carouselExampleCaptions" class="carousel slide" data-mdb-ride="carousel">
+            <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-mdb-ride="carousel">
                <div class="carousel-indicators">
                   {% for image in ad.images %} 
                   <button
@@ -99,7 +99,7 @@
                </div>
                <div class="carousel-inner">
                   {% for image in ad.images %}                    
-                  <div class="carousel-item {% if loop.first %}active{% endif %}">
+                  <div class="carousel-item h-100 {% if loop.first %}active{% endif %}">
                      <img
                         src="/uploads/sliders/{{ image.image }}"
                         class="d-block w-100 img-fluid"
