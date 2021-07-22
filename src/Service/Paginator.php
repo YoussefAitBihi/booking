@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Paginator class.
  * 
- * Sert à extraire toute la notion de calcul et sert également à récupérer les données paginées.
+ * Sert à extraire toute la notion de calcul et sert également à récupérer les données de façon paginées.
  * 
  * Cette classe est utilisable dans le cas où on est dans la page qui contient toutes items et vous souhaitez de les afficher de façon paginées, ou dans le cas où on est dans une page privée comme par exemple la page de profil.
  * 
@@ -24,7 +24,7 @@ class Paginator
 {  
     
     /**
-     * Le gestionnaire de l'entité qui nous permet de trouver le dépôt (Repository) adéquat dont on a besoin
+     * Le gestionnaire de l'entité qui permet de trouver le dépôt (Repository) adéquat dont on a besoin
      * 
      * @var EntityManagerInterface $entityManagerInterface
      */
@@ -38,21 +38,21 @@ class Paginator
     private string $entityClassName;
 
     /**
-     * Le moteur de template twig qui nous permet de générer facilement le rendu de la pagination
+     * Le moteur de template twig qui permet de générer facilement le rendu de la pagination
      * 
      * @var Environment $twig
      */
     private Environment $twig;
 
     /**
-     * Le service RequestStack qui nous permet récupérer notamment la route courante
+     * Le service RequestStack qui permet récupérer notamment la route courante
      * 
      * @var RequestStack $requestStack 
      */
     private RequestStack $requestStack;
 
     /**
-     * Le propriétaire des annonces qui nous permet de connaitre si on est sur la page de profil
+     * Le propriétaire des annonces qui permet de connaitre si on est sur la page de profil
      * 
      * @var User $owner
      */
@@ -66,7 +66,7 @@ class Paginator
     private array $items = [];
 
     /**
-     * La limite des items (objets) qui va récupérer.
+     * Le max items (objets) à récupérer
      * 
      * @var int $limit
      */
@@ -94,9 +94,9 @@ class Paginator
     private string $paginationTemplatePath;
 
     /**
-     * Le constructeur du service de la pagination qui va nous injecter les services dont on a besoin
+     * Le constructeur du service de la classe Paginator qui va injecter tous les services dont on a besoin
      * 
-     * Se souvenir de configurer la fichier services.yaml en définissant l'argument paginationTemplatePath qui est le chemin de la template de la pagination
+     * Se souvenir de configurer le fichier services.yaml en définissant l'argument paginationTemplatePath qui est le chemin de la template de la pagination
      *
      * @param EntityManagerInterface $entityManagerInterface
      * @param Environment $twig
@@ -117,7 +117,7 @@ class Paginator
     }
 
     /**
-     * Permet de récupérer le nom de l'entité sur laquelle on compte sur lui pour récupérer le repository
+     * Permet de récupérer le nom de l'entité sur laquelle l'entityManagerInterface compte sur lui pour récupérer le repository
      *
      * @return string
      */
@@ -127,7 +127,7 @@ class Paginator
     }
 
     /**
-     * Permet de spécifier le nom de l'entité sur laquelle on compte sur lui pour récupérer le repository
+     * Permet de spécifier le nom de l'entité sur laquelle l'entityManagerInterface compte sur lui pour récupérer le repository
      *
      * @param string $entityClassName
      * @return self
@@ -163,7 +163,7 @@ class Paginator
     }
 
     /**
-     * Permet de récupérer la limite des items
+     * Permet de récupérer le nombre maximale des items
      *
      * @return integer
      */
@@ -173,7 +173,7 @@ class Paginator
     }
 
     /**
-     * Permet de spécifier la limite des items
+     * Permet de spécifier le nombre maximale des items
      *
      * @param integer $limit
      * @return self
@@ -196,7 +196,7 @@ class Paginator
     }
 
     /**
-     * Permet de spécifier la page courante sur laquelle on so trouve
+     * Permet de spécifier la page courante sur laquelle on se trouve
      *
      * @param integer $currentPage
      * @return self
@@ -219,7 +219,7 @@ class Paginator
     }
 
     /**
-     * Permet de spécifier l'ordre des items (déscandante par défaut) 
+     * Permet de spécifier l'ordre des items de façon descandante ou ascendante (déscandante par défaut) 
      *
      * @param string $orderBy
      * @return self
@@ -241,7 +241,7 @@ class Paginator
     private function getRepository(): ObjectRepository
     {
         if (empty($this->entityClassName)) {
-            throw new Exception("Après avoir injécté ce service vous devez spécifier l'enitité sur laquelle nous allons paginer. Utiliser la méthode setEntityClassName()");
+            throw new Exception("Après avoir injécté ce service vous devez spécifier l'enitité sur laquelle le service va compter sur lui pour récupérer les items de façon paginées. Essayer d'utiliser la méthode setEntityClassName()");
         }
 
         return $this->entityManagerInterface->getRepository($this->getEntityClassName());
@@ -270,7 +270,7 @@ class Paginator
     }
 
     /**
-     * Permet de calculer l'offset
+     * Permet de calculer et de retourner l'offset
      * 
      * @throws Exception si la propriété currentPage n'est pas encore définie
      *
@@ -287,7 +287,7 @@ class Paginator
     }
 
     /**
-     * Permet de récupérer la route courante
+     * Permet de récupérer la route de la page actuelle sur laquelle on se trouve
      *
      * @return string
      */
@@ -299,7 +299,7 @@ class Paginator
     }
 
     /**
-     * Permet d'afficher le rendu de la pagination au sein d'une template twig
+     * Permet de renvoyer le rendu de la pagination au sein d'une template twig
      * 
      * Pour que la méthode render() fonctionne correctement, nous devons passer comme paramètre le nom de la template de la pagination, et on lui passant les paramètres nécessaires de la template
      * 
@@ -330,7 +330,7 @@ class Paginator
     }
 
     /**
-     * Permet d'apporter et de retourner les items (objets) paginés en ordre demandé
+     * Permet de récupérer les items (objets) paginés en ordre demandé
      *
      * @return array
      */
