@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * 
  * Sert à extraire toute la notion de calcul et sert également à récupérer les données de façon paginées.
  * 
- * Cette classe est utilisable dans le cas où on est dans la page qui contient toutes items et vous souhaitez de les afficher de façon paginées, ou dans le cas où on est dans une page privée comme par exemple la page de profil.
+ * Cette classe est utilisable dans le cas où on est dans la page qui contient toutes les items et vous souhaitez de les afficher de façon paginées, ou dans le cas où on est dans une page privée comme par exemple la page de profil.
  * 
  * Elle nécessite après l'avoir injécté de passer le nom de l'entité et la page courante
  * 
@@ -130,6 +130,7 @@ class Paginator
      * Permet de spécifier le nom de l'entité sur laquelle l'entityManagerInterface compte sur lui pour récupérer le repository
      *
      * @param string $entityClassName
+     * 
      * @return self
      */
     public function setEntityClassName(string $entityClassName): self
@@ -153,6 +154,7 @@ class Paginator
      * Permet de spécifier le propriètaire dans le cas où on est dans la page de profil
      *
      * @param User $owner
+     * 
      * @return self
      */
     public function setOwner(User $owner): self
@@ -176,6 +178,7 @@ class Paginator
      * Permet de spécifier le nombre maximale des items
      *
      * @param integer $limit
+     * 
      * @return self
      */
     public function setLimit(int $limit): self
@@ -199,6 +202,7 @@ class Paginator
      * Permet de spécifier la page courante sur laquelle on se trouve
      *
      * @param integer $currentPage
+     * 
      * @return self
      */
     public function setCurrentPage(int $currentPage): self
@@ -222,6 +226,7 @@ class Paginator
      * Permet de spécifier l'ordre des items de façon descandante ou ascendante (déscandante par défaut) 
      *
      * @param string $orderBy
+     * 
      * @return self
      */
     public function setOrderBy(string $orderBy): self
@@ -277,7 +282,7 @@ class Paginator
      * @return int
      */
     private function calculateOffset(): int
-    {
+    {   
         if (empty($this->currentPage)) {
             throw new Exception("Après avoir injécté ce service, vous devez spécifié la page courante en utilisant la méthode setCurrentPage()");
         }
@@ -338,9 +343,9 @@ class Paginator
     {
         $criteria = [];
 
-        // If there's an owner parameter
+        // Dans le cas où on est dans la page de profil
         if (!empty($this->owner)) {
-            array_merge($criteria, [
+            $criteria = array_merge($criteria, [
                 'owner' => $this->owner
             ]);
         }

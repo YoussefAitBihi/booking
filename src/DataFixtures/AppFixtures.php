@@ -191,6 +191,7 @@ class AppFixtures extends Fixture
 
                 // Fake booking
                 for ($b = 0; $b < 5; $b++) {
+                    
                     $book = new Booking();
                     
                     $startDate = $faker->dateTimeBetween('-2 months');
@@ -206,8 +207,7 @@ class AppFixtures extends Fixture
 
                     $manager->persist($book);
                 }
-            } // End fake ads
-            
+            } // End fake ads    
         
         } // End fake users
 
@@ -225,7 +225,7 @@ class AppFixtures extends Fixture
 
                 $manager->persist($comment);
             }
-        }
+        } // End fake comments
 
         $manager->flush();
     }

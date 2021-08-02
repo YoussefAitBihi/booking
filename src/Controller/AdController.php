@@ -23,14 +23,16 @@ class AdController extends AbstractController
 {
 
     /**
-     * Create a new ad
+     * Sert à créer une nouvelle annonce
      * 
      * @Route("/ad/new", name="ad_create", methods={"GET", "POST"})
+     * 
      * @IsGranted("ROLE_USER")
      *
      * @param Request $request
      * @param Uploader $uploader
      * @param EntityManagerInterface $entityManager
+     * 
      * @return Response
      */
     public function create(
@@ -42,17 +44,17 @@ class AdController extends AbstractController
         // Create a new Ad
         $ad = new Ad();
 
-        // User connected
+        // L'utilisateur connecté
         $user = $this->getUser();
 
-        // Creating form object and handling request
+        // Création l'objet form and manipulation la request
         $form = $this
                     ->createForm(AdType::class, $ad)
                     ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Upload images and add them to the form
+            // Upload les images de carousel
             foreach ($form->get('images')->getData() as $key => $element) {
 
                 /** @var UploadedFile $img contains image that already uploaded */
@@ -67,17 +69,17 @@ class AdController extends AbstractController
                 $element->setImage($newFilename);
             }
 
-            /** @var UploadedFile $thumbnail contains thumbnail that already uploaded */
+            /** @var UploadedFile $thumbnail la minuature de l'annonce */
             $thumbnail = $form->get('thumbnail')->getData();
 
-            // New file name
+            // Nouveau filename
             $newFilename = $uploader
                                 ->upload(
                                     $thumbnail, 
                                     $this->getParameter('thumbnails_directory')
                                 );
 
-            // Set Thumbnail and owner
+            // Set la minuature et le propriétaire (owner) au sein de l'objet
             $ad
                 ->setThumbnail($newFilename)
                 ->setOwner($user);
@@ -85,7 +87,7 @@ class AdController extends AbstractController
             $entityManager->persist($ad);
             $entityManager->flush();
 
-            // Add flash messages
+            // Ajouter le message flash de succès
             $this->addFlash(
                 'success',
                 "Votre annonce dont le titre est <strong>{$ad->getTitle()}</strong> a été bien créée"
@@ -103,13 +105,14 @@ class AdController extends AbstractController
     }
     
     /**
-     * Show an ad via Slug and Id
+     * Sert à récupérer l'annonce demandée
      * 
      * @Route("/ad/{id}-{slug}", name="ad_show", methods={"GET"})
      * 
      * @param Ad $ad
      * @param AdRepository $adRepository
      * @param UserRepository $userRepository
+     * 
      * @return Response
      */
     public function show(
@@ -118,9 +121,9 @@ class AdController extends AbstractController
         UserRepository $userRepository
     ): Response
     {  
-        // Ad rating
+        // Le feedback (rating) de l'annonce
         $ratingAd = $adRepository->getRating($ad->getId());
-        // All counters
+        // La totalité 
         $counters = $userRepository->getAllCounts($ad->getOwner()->getId());
         // Top Ads
         $topAds = $adRepository->getTopAdsUser($ad->getOwner()->getId(), 2);

@@ -21,9 +21,10 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Get user's comment total
+     * Sert à récupérer la totalité de commentaires du propriétaire demandé par ID
      *
      * @param int $id
+     * 
      * @return integer
      */
     private function getCommentsTotal(int $id): int
@@ -42,9 +43,10 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Get user's booking total
+     * Sert à récupérer la totalité de voyageurs du propriétaire demandé par ID
      *
      * @param integer $id
+     * 
      * @return integer|null
      */
     private function getBookingsTotal(int $id): ?int
@@ -63,9 +65,10 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Calc and retrieve user's rating
+     * Sert à récupérer le feedback (rating) du propriétaire demandé par ID
      *
      * @param integer $id
+     * 
      * @return integer
      */
     public function getRating(int $id): int
@@ -84,9 +87,10 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Get All counts
+     * Tous les compteurs
      *
      * @param integer $id
+     * 
      * @return array
      */
     public function getAllCounts(int $id): array
@@ -102,6 +106,7 @@ class UserRepository extends ServiceEntityRepository
         ];
     }
 
+    
     public function getTopAdUser(int $userId, int $limit)
     {
         $topAdUser = $this

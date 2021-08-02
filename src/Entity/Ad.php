@@ -139,7 +139,7 @@ class Ad
     }
 
     /**
-     * Get Rating Ad
+     * Sert à calculer et de retourner le feedback (rating) de l'annonce
      *
      * @return integer|null
      */

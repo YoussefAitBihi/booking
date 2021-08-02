@@ -234,13 +234,15 @@ class UserController extends AbstractController
      * 
      * @param User $user
      * @param UserRepository $userRepository
+     * @param Paginator $paginator
+     * @param int $page
      * @return Response
      */
     public function profile(
         User $user,
         UserRepository $userRepository,
-        int $page,
-        Paginator $paginator
+        Paginator $paginator,
+        int $page
     ): Response
     {
         $paginator
